@@ -1,0 +1,45 @@
+{
+  "name": "autoimg-core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "visualize:build": "tsup --config tsup.visualize.config.ts",
+    "visualize": "npm run visualize:build && start visualizer.html",
+    "visualize:roi": "npm run visualize:build && start visualizer_roi.html",
+    "visualize:upscale": "npm run visualize:build && start visualizer_upscale.html",
+    "test": "vitest run",
+    "test:update": "vitest run -u",
+    "test:watch": "vitest",
+    "test:debug": "cross-env DEBUG=1 vitest --browser.headless=false",
+    "test:ui": "vitest --ui"
+  },
+  "devDependencies": {
+    "@playwright/browser-chromium": "^1.56.1",
+    "@types/node": "^24.10.1",
+    "@vitest/browser-playwright": "^4.0.6",
+    "@vitest/ui": "^4.0.6",
+    "cross-env": "^10.1.0",
+    "esbuild": "^0.24.0",
+    "playwright": "^1.56.1",
+    "tsup": "^8.0.0",
+    "vitest": "^4.0.6"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.0.0"
+  }
+}

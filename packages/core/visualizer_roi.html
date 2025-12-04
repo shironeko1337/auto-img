@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>OWL-ViT Object Detection</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #eee;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 32px;
+    }
+
+    .controls {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .control-row:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .btn {
+      background: #3b3b5c;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #4a4a6a;
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #7577f2;
+    }
+
+    .text-input {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .text-input input {
+      width: 100%;
+      background: #0f0f1a;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .text-input input:focus {
+      outline: none;
+      border-color: #6366f1;
+    }
+
+    .text-input input::placeholder {
+      color: #555;
+    }
+
+    .number-input input {
+      width: 100px;
+      background: #0f0f1a;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .workspace {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      background: #0f0f1a;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #canvas {
+      max-width: 100%;
+      max-height: 600px;
+    }
+
+    .placeholder {
+      color: #444;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .placeholder-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .status-bar {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #555;
+      flex-shrink: 0;
+    }
+
+    .status-dot.loading {
+      background: #f59e0b;
+      animation: pulse 1s infinite;
+    }
+
+    .status-dot.ready {
+      background: #22c55e;
+    }
+
+    .status-dot.error {
+      background: #ef4444;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .status-text {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .progress {
+      width: 200px;
+      height: 6px;
+      background: #0f0f1a;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #a855f7);
+      transition: width 0.3s;
+    }
+
+    .results {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .results h3 {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .results-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #0f0f1a;
+      border-radius: 8px;
+    }
+
+    .result-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .result-label {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .result-score {
+      color: #888;
+      font-size: 14px;
+    }
+
+    .result-bbox {
+      font-size: 12px;
+      color: #555;
+      font-family: monospace;
+    }
+
+    .presets {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .preset-btn {
+      background: #252542;
+      border: 1px solid #333;
+      color: #aaa;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover {
+      background: #3b3b5c;
+      color: #fff;
+      border-color: #555;
+    }
+
+    .tip {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🦉 OWL-ViT Object Detection</h1>
+    <p class="subtitle">Open-vocabulary detection — find anything by describing it</p>
+
+    <div class="controls">
+      <div class="control-row">
+        <div>
+          <label>Image</label>
+          <label class="btn"
+                 for="imageInput">📁 Upload Image</label>
+          <input type="file"
+                 id="imageInput"
+                 accept="image/*">
+        </div>
+
+        <div class="text-input">
+          <label>Objects to detect (comma-separated)</label>
+          <input type="text"
+                 id="queryInput"
+                 placeholder="e.g., person, car, dog, building, text, logo">
+        </div>
+
+        <div class="number-input">
+          <label>Threshold</label>
+          <input type="number"
+                 id="threshold"
+                 value="0.1"
+                 min="0"
+                 max="1"
+                 step="0.05">
+        </div>
+
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn btn-primary"
+                  id="detectBtn"
+                  disabled>🔍 Detect</button>
+        </div>
+      </div>
+
+      <div class="control-row">
+        <div>
+          <label>Quick presets</label>
+          <div class="presets">
+            <button class="preset-btn"
+                    data-query="person, face, hand, clothing">People</button>
+            <button class="preset-btn"
+                    data-query="car, truck, motorcycle, bicycle, bus">Vehicles</button>
+            <button class="preset-btn"
+                    data-query="cat, dog, bird, horse, cow">Animals</button>
+            <button class="preset-btn"
+                    data-query="chair, table, sofa, bed, lamp">Furniture</button>
+            <button class="preset-btn"
+                    data-query="text, logo, sign, label, button">Text/UI</button>
+            <button class="preset-btn"
+                    data-query="object, thing, item, region">Generic</button>
+          </div>
+        </div>
+      </div>
+      <p class="tip">💡 Tip: Be specific! "red car" works better than just "car". Try multiple
+        related terms.</p>
+    </div>
+
+    <div class="workspace">
+      <div class="canvas-wrapper">
+        <canvas id="canvas"></canvas>
+        <div class="placeholder"
+             id="placeholder">
+          <div class="placeholder-icon">🖼️</div>
+          <div>Upload an image to get started</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-dot"
+           id="statusDot"></div>
+      <span class="status-text"
+            id="statusText">Loading model...</span>
+      <div class="progress">
+        <div class="progress-bar"
+             id="progressBar"
+             style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="results"
+         id="resultsPanel"
+         style="display: none; margin-top: 20px;">
+      <h3>Detected Objects</h3>
+      <div class="results-list"
+           id="resultsList"></div>
+    </div>
+  </div>
+
+  <script src="./dist/visualize_roi.bundle.js"></script>
+</body>
+
+</html>

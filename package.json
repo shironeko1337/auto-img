@@ -1,0 +1,10 @@
+{
+  "name": "imgcenter",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoImg Web Component Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .example {
+      margin: 40px 0;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .example h2 {
+      margin-top: 0;
+    }
+    .container {
+      width: 400px;
+      height: 300px;
+      border: 2px dashed #999;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>AutoImg Web Component Examples</h1>
+
+  <div class="example">
+    <h2>1. Fixed Size Image</h2>
+    <auto-img
+      src="https://picsum.photos/800/600"
+      width="400px"
+      height="300px"
+    ></auto-img>
+  </div>
+
+  <div class="example">
+    <h2>2. Fill Parent Container</h2>
+    <div class="container">
+      <auto-img
+        src="https://picsum.photos/800/600?random=2"
+        placeholder="https://via.placeholder.com/400x300/cccccc/666666?text=Loading..."
+      ></auto-img>
+    </div>
+  </div>
+
+  <div class="example">
+    <h2>3. With Focus Area</h2>
+    <auto-img
+      src="https://picsum.photos/800/600?random=3"
+      width="400px"
+      height="300px"
+      focus="200,150;600,450"
+      padding="20"
+    ></auto-img>
+  </div>
+
+  <div class="example">
+    <h2>4. Deferred Rendering</h2>
+    <auto-img
+      defer
+      id="deferred-img"
+      src="https://picsum.photos/800/600?random=4"
+      width="400px"
+      height="300px"
+    ></auto-img>
+    <button onclick="renderDeferred()">Render Image</button>
+  </div>
+
+  <div class="example">
+    <h2>5. Allow Distortion</h2>
+    <auto-img
+      src="https://picsum.photos/800/600?random=5"
+      width="400px"
+      height="200px"
+      allow-distortion
+    ></auto-img>
+  </div>
+
+  <!-- Load the library -->
+  <script src="./dist/index.global.js"></script>
+
+  <script>
+    // Initialize with global config
+    AutoImg.init({
+      resizeRerender: true,
+      showPlaceholderWhenResizing: false,
+      resizeThrottle: 300
+    });
+
+    // Function to render deferred image
+    function renderDeferred() {
+      AutoImg.render('#deferred-img');
+    }
+
+    // Example: Render all images
+    // AutoImg.render();
+
+    // Example: Render specific image with override
+    // AutoImg.render('#deferred-img', { width: '500px' });
+
+    // Example: Render multiple images with different options
+    // AutoImg.render([
+    //   ['#img1'],
+    //   ['#img2', { height: '200px' }]
+    // ]);
+  </script>
+</body>
+</html>

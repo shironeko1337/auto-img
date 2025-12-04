@@ -1,0 +1,239 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A web component that automatically centers images based on a focus area using intelligent cropping and scaling algorithms.",
+          "name": "AutoImgElement",
+          "tagName": "auto-img",
+          "customElement": true,
+          "members": [
+            {
+              "kind": "method",
+              "name": "render",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "RenderOptions"
+                  },
+                  "description": "Optional width and height overrides"
+                }
+              ],
+              "description": "Manually trigger rendering of the image with optional dimension overrides"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "description": "Image URL or base64 string (required)",
+              "fieldName": "src"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "description": "Width of the container (default: 100%)",
+              "default": "\"100%\"",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "description": "Height of the container (default: 100%)",
+              "default": "\"100%\"",
+              "fieldName": "height"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "description": "Placeholder image URL or key reference to global config placeholder object",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "defer",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether to defer rendering - requires manual call to AutoImg.render()",
+              "default": "false",
+              "fieldName": "defer"
+            },
+            {
+              "name": "focus",
+              "type": {
+                "text": "string"
+              },
+              "description": "Focus area coordinates as 'topLeft.x,topLeft.y;bottomRight.x,bottomRight.y'",
+              "fieldName": "focus"
+            },
+            {
+              "name": "focus.tl",
+              "type": {
+                "text": "string"
+              },
+              "description": "Focus area top-left corner as 'x,y'",
+              "fieldName": "focus.tl"
+            },
+            {
+              "name": "focus.topleft",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.tl",
+              "fieldName": "focus.topleft"
+            },
+            {
+              "name": "focus.top-left",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.tl",
+              "fieldName": "focus.top-left"
+            },
+            {
+              "name": "focus.tr",
+              "type": {
+                "text": "string"
+              },
+              "description": "Focus area top-right corner as 'x,y'",
+              "fieldName": "focus.tr"
+            },
+            {
+              "name": "focus.topright",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.tr",
+              "fieldName": "focus.topright"
+            },
+            {
+              "name": "focus.top-right",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.tr",
+              "fieldName": "focus.top-right"
+            },
+            {
+              "name": "focus.bl",
+              "type": {
+                "text": "string"
+              },
+              "description": "Focus area bottom-left corner as 'x,y'",
+              "fieldName": "focus.bl"
+            },
+            {
+              "name": "focus.bottomleft",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.bl",
+              "fieldName": "focus.bottomleft"
+            },
+            {
+              "name": "focus.bottom-left",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.bl",
+              "fieldName": "focus.bottom-left"
+            },
+            {
+              "name": "focus.br",
+              "type": {
+                "text": "string"
+              },
+              "description": "Focus area bottom-right corner as 'x,y'",
+              "fieldName": "focus.br"
+            },
+            {
+              "name": "focus.bottomright",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.br",
+              "fieldName": "focus.bottomright"
+            },
+            {
+              "name": "focus.bottom-right",
+              "type": {
+                "text": "string"
+              },
+              "description": "Alias for focus.br",
+              "fieldName": "focus.bottom-right"
+            },
+            {
+              "name": "allow-distortion",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allow image stretching to fill container (default: false)",
+              "default": "false",
+              "fieldName": "allow-distortion"
+            },
+            {
+              "name": "padding",
+              "type": {
+                "text": "string"
+              },
+              "description": "Minimum padding around focus area in pixels (e.g., '20' or '20px')",
+              "default": "\"0\"",
+              "fieldName": "padding"
+            },
+            {
+              "name": "fetch-focus",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fetch focus data from remote server using src",
+              "default": "false",
+              "fieldName": "fetch-focus"
+            },
+            {
+              "name": "fetch-upscale",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fetch upscaled image from remote server",
+              "default": "false",
+              "fieldName": "fetch-upscale"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "auto-img",
+          "declaration": {
+            "name": "AutoImgElement",
+            "module": "src/index.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
