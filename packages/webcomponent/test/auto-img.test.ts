@@ -113,10 +113,6 @@ describe("AutoImg Global API", () => {
     expect((window as any).AutoImg).toBeDefined();
   });
 
-  it("should have init method", () => {
-    expect(typeof (window as any).AutoImg.init).toBe("function");
-  });
-
   it("should have scan method", () => {
     expect(typeof (window as any).AutoImg.scan).toBe("function");
   });

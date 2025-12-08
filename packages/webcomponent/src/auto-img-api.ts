@@ -1,15 +1,18 @@
-import type { AutoImgElement } from "./auto-img-element";
-import { AutoImgModel, MutableState, PixelSize } from "./base";
+import { AutoImgModel } from "./base";
 
 export interface AutoImgConfig {
   imageServer?: string;
   resizeRerender?: boolean;
   placeholder?: string | Record<string, string>;
   resizeThrottle?: number;
-  loadPlaceholderTimeout: number;
-  loadImageTimeout: number;
+  loadPlaceholderTimeout?: number;
+  loadImageTimeout?: number;
+  defer?: boolean;
 }
 
+/**
+ * AutoImg API for model based rendering.
+ */
 export class AutoImgAPI {
   config: AutoImgConfig = {
     resizeRerender: true,
@@ -19,11 +22,18 @@ export class AutoImgAPI {
   };
 
   private elementModelMap: Map<HTMLElement, AutoImgModel> = new Map();
+  // For remove resize listener on element remove.
   private mutationObserver: MutationObserver | null = null;
+  // For auto resize on resizing event.
   private resizeObserver!: ResizeObserver;
 
-  constructor() {
-    // Check if running in browser environment
+  /**
+   * 1. Check compability.
+   * 2. Initialize resize observer and mutation observer.
+   * 3. Load all element on DOM ready. It can be disabled by set `defer = true`
+   *  or set `defer` at element level.
+   */
+  constructor(config: AutoImgConfig = {}) {
     if (typeof globalThis === "undefined" || typeof document === "undefined") {
       console.error(
         "autoimg-webcomponent: This library requires a browser environment with DOM support"
@@ -33,44 +43,41 @@ export class AutoImgAPI {
 
     this.resizeObserver = new ResizeObserver(this.handleResize);
 
-    // Set up MutationObserver to auto-cleanup when elements are removed from DOM
     this.setupMutationObserver();
-  }
 
-  /**
-   * Initialize or update global configuration
-   */
-  init(config: AutoImgConfig) {
     this.config = { ...this.config, ...config };
   }
 
   /**
-   * Handle resize with throttling
+   * Scan the document and attach a model for each selected element.
+   * When calling this method manually, we assume the user wants to load
+   * `[data-auto-img]` elements instead of `<auto-img/>` elements.
+   *
+   * 1. When attaching a model, API also holds a map from element to model
+   *    to react to resize event.
+   * 2. The model itself reads all attrs, load images and render later
+   *    (if it's deferred, no render).
    */
-  private handleResize = (entries: ResizeObserverEntry[]): void => {
-    for (const entry of entries) {
-      const el = entry.target as HTMLElement;
-      const { width, height } = entry.contentRect;
-      this.elementModelMap.get(el)?.resizeState?.set({ width, height });
-    }
-  };
+  loadAll(selector = "[data-auto-img]") {
+    const onload = () => {
+      document.querySelectorAll(selector).forEach((e) => {
+        const model = this.attachModel(e as HTMLElement);
+        model.readSyncAttrs();
+        model.loadAndRender();
+      });
+    };
 
-  /**
-   * Scan the document and attach a model, for each element
-   * 1. Watch the resizing event and attach a callback when size is steady.
-   * 2. Read attrs and maybe render.
-   */
-  scan() {
-    document.querySelectorAll("auto-img,[data-auto-img]").forEach((e) => {
-      const model = this.attachModel(e as HTMLElement);
-      model.readSyncAttrs();
-      model.loadAndListen();
-    });
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", onload);
+    } else {
+      onload();
+    }
   }
 
   /**
-   * Manually render a element.
-   * waitResize: whether we wait until size is steady.
+   * Manually render any supported element.
+   *
+   * @param waitResize: whether we wait until size is steady.
    *
    * There are two scenarios we should call render manually
    * 1. waitResize: true - Element or container is resizing and we want to render the image
@@ -91,14 +98,14 @@ export class AutoImgAPI {
     model.defer = false;
 
     if (waitResize) {
-      await model.loadAndListen();
+      await model.loadAndRender();
     } else {
       // temporarily set to true just to prevent render automatically
       // because we want to set isSizeSteady to true exactly before render.
       // this value is not set back to `false` or original value because
       // there is no way we can track if it's set during rendering or not (we don't have to).
       model.defer = true;
-      await model.loadAndListen();
+      await model.loadAndRender();
       model.isSizeSteady = true;
       await model.render();
       model.defer = false;
@@ -115,6 +122,17 @@ export class AutoImgAPI {
     }
   }
 
+  /**
+   * Handle resize with throttling
+   */
+  private handleResize = (entries: ResizeObserverEntry[]): void => {
+    for (const entry of entries) {
+      const el = entry.target as HTMLElement;
+      const { width, height } = entry.contentRect;
+      this.elementModelMap.get(el)?.resizeState?.set({ width, height });
+    }
+  };
+
   private watch(element: HTMLElement, model: AutoImgModel) {
     this.resizeObserver.observe(element);
     this.elementModelMap.set(element, model);
@@ -126,7 +144,7 @@ export class AutoImgAPI {
   }
 
   /**
-   * Set up MutationObserver to automatically clean up removed elements
+   * Set up MutationObserver to clean up model and map entries on element remove.
    */
   private setupMutationObserver(): void {
     this.mutationObserver = new MutationObserver((mutations) => {
@@ -139,7 +157,6 @@ export class AutoImgAPI {
       }
     });
 
-    // Observe the entire document for node removals
     this.mutationObserver.observe(document.body, {
       childList: true,
       subtree: true,

@@ -1,3 +1,7 @@
+/**
+ * 1. Basic types and component model.
+ * 2. Utility functions.
+ */
 import {
   AutoImgInput,
   Point,
@@ -12,6 +16,10 @@ import { AutoImgAPI, AutoImgConfig } from "./auto-img-api";
 
 export type PixelSize = { width: number; height: number };
 
+/**
+ * A state with throttle mechanism and a stable handler setter to emit
+ * when it's stable.
+ */
 export class MutableState<T> {
   initialized = false;
   isStable = true;
@@ -109,7 +117,8 @@ function getFocus(input: any) {
 }
 
 /**
- * A general model applicable for all types of images.
+ * Component model attached to <autoimg/> element and other types of element
+ * with core functionalities.
  */
 export class AutoImgModel {
   config: AutoImgConfig;
@@ -137,6 +146,10 @@ export class AutoImgModel {
     state.setOnResize(() => (this.isSizeSteady = false));
     state.setOnResizeStable(this.onSizeSteady);
     this.resizeState = state;
+
+    if (this.host.tagName === "AUTO-IMG") {
+      (this.host as AutoImgElement).model = this;
+    }
   }
 
   /**
@@ -147,7 +160,7 @@ export class AutoImgModel {
    *    When placeholder is present, load placeholder then load image.
    * 3. Define on load complete callbacks.
    */
-  async loadAndListen() {
+  async loadAndRender() {
     const tag = this.host.tagName;
     if (tag === "AUTO-IMG") {
       const el = this.host as AutoImgElement;
@@ -196,7 +209,7 @@ export class AutoImgModel {
     this.centralizerInput.imageWidth = imageSize.width;
     this.centralizerInput.imageHeight = imageSize.height;
     this.isImageLoaded = true;
-    if (!this.defer) {
+    if (!this.defer && !this.config.defer) {
       this.render();
     }
   }
@@ -205,7 +218,7 @@ export class AutoImgModel {
     this.isSizeSteady = true;
     this.centralizerInput.viewHeight = containerSize.height;
     this.centralizerInput.viewWidth = containerSize.height;
-    if (!this.defer) {
+    if (!this.defer && !this.config.defer) {
       this.render();
     }
   }

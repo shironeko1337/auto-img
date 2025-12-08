@@ -1,11 +1,15 @@
+/**
+ * Definition and functions specific to <auto-img/> element.
+ */
 import { ImagePosition } from "autoimg-core";
-import { HostAsyncAttrs, HostSyncAttrs, PixelSize } from "./base";
+import { AutoImgModel, HostAsyncAttrs, HostSyncAttrs, PixelSize } from "./base";
 
 function getReversePctNumber(value: string) {
   return `${-Number(value.replace(/[^\d\-\.]/g, ""))}%`;
 }
 
 export class AutoImgElement extends HTMLElement {
+  model?: AutoImgModel;
   private img: HTMLImageElement;
   private container: HTMLDivElement;
   declare shadowRoot: ShadowRoot;
@@ -34,7 +38,10 @@ export class AutoImgElement extends HTMLElement {
     this.shadowRoot.appendChild(this.container);
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    this.model?.readSyncAttrs();
+    this.model?.loadAndRender();
+  }
 
   disconnectedCallback() {}
 
@@ -91,3 +98,4 @@ export class AutoImgElement extends HTMLElement {
     ${getReversePctNumber(top)})`;
   }
 }
+

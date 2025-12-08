@@ -25,8 +25,7 @@
   "scripts": {
     "build": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --global-name AutoImg --minify",
     "dev": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --global-name AutoImg --watch",
-    "serve": "npx serve .",
-    "demo": "npm run build && npm run serve",
+    "demo": "npm run build && npx serve ./demo",
     "test": "vitest run",
     "test:watch": "vitest"
   },
