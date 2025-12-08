@@ -39,7 +39,7 @@ type JSXBase = JSX.IntrinsicElements extends { span: unknown }
 
 declare global {
   interface Window {
-    AutoImgAPI: typeof AutoImgAPI;
+    AutoImg: typeof AutoImg;
     AutoImgElement: typeof AutoImgElement;
   }
 
