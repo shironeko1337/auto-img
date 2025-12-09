@@ -1,90 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
   <title>AutoImg Demo</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
-    .example {
-      margin: 40px 0;
-      border: 1px solid #ddd;
-      padding: 20px;
-      border-radius: 8px;
+
+    .hidden {
+      display: none!important;
     }
-    .example h2 {
-      margin-top: 0;
+
+    .focus-container {
+      position: relative;
     }
-    .container {
-      width: 400px;
-      height: 300px;
-      border: 2px dashed #999;
-      margin: 20px 0;
+
+    .focus {
+      position: absolute;
+      border: 2px solid springgreen;
+      box-sizing: border-box;
+    }
+
+    .htmlelement-showcase {
+      background-image: url(https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE);
+      background-repeat: none;
+    }
+
+    .webcomponent-showcase,
+    .htmlelement-showcase {
+      border: 1px solid black;
+      box-sizing: content-box;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      gap: 1rem;
     }
   </style>
 </head>
+
 <body>
-  <!-- <h1>AutoImg Web Component Demo</h1>
+  <h1>Showing a 800 × 600 image in a 200 × 200 container</h1>
+  <p>Dimensions are expressed as (width × height in px)</p>
+  <section>
+    <fieldset>
+      <legend>Host type:</legend>
 
-  <div class="example">
-    <h2>1. Basic Usage - Fixed Size</h2>
-    <auto-img
-      src="https://picsum.photos/800/600"
-      width="400px"
-      height="300px"
-    ></auto-img>
-  </div>
+      <div>
+        <input type="radio"
+               name="hosttype"
+               value="webcomponent"
+               checked />
+        <label for="webcomponent"
+               title="You only need to load core js library.">Web component</label>
+      </div>
 
-  <div class="example">
-    <h2>2. Fill Parent Container</h2>
-    <div class="container">
-      <auto-img
-        src="https://picsum.photos/800/600?random=2"
-        placeholder="https://via.placeholder.com/400x300/cccccc/666666?text=Loading..."
-      ></auto-img>
+      <div>
+        <input type="radio"
+               name="hosttype"
+               value="htmlelement" />
+        <label for="htmlelement"
+               title="You need extra script to load these elements.">HTMLElement with
+          background</label>
+      </div>
+    </fieldset>
+    <div class="row">
+      <div>
+        <p>1. Fits into the container without distortion</p>
+        <auto-img class="webcomponent-showcase"
+                  src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                  width="200"
+                  height="200"
+                  focus="27,235;452,490"
+                  padding="10"></auto-img>
+        <div class="hidden htmlelement-showcase"
+             data-auto-img
+             data-auto-img-src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+             data-auto-img-focus="27,235;452,490"
+             data-auto-img-padding="10"
+             style="width: 200px; height: 200px;"></div>
+      </div>
     </div>
-  </div>
 
-  <div class="example">
-    <h2>3. With Focus Area</h2>
-    <auto-img
-      src="https://picsum.photos/800/600?random=3"
-      width="400px"
-      height="300px"
-      focus="200,150;600,450"
-      padding="20"
-    ></auto-img>
-  </div>
+    <script>// This is required for loading htmlelement
+      window.addEventListener("load", () => {
+        window.AutoImg.AutoImgAPI.loadAll();
+      });
+    </script>
+  </section>
 
-  <div class="example">
-    <h2>4. Deferred Rendering</h2>
-    <auto-img
-      defer
-      id="deferred-img"
-      src="https://picsum.photos/800/600?random=4"
-      width="400px"
-      height="300px"
-    ></auto-img>
-    <button onclick="renderDeferred()">Render Image</button>
-  </div>
+  <h1>Original image</h1>
+  <section>
+    <div>
+      <label><input type="checkbox"
+               checked
+               id="togglefocus" />Toggle focus area</label>
+    </div>
+    <div class="row">
+      <div>
+        <p>1.</p>
+        <div class="focus-container"
+             style="position:relative">
+          <div class="focus"
+               style="left: 27px; top:235px; width: 425px; height: 255px;"></div>
+          <img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+               alt="Image not accessible"
+               width="800"
+               height="600" />
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="/dist/auto-img-element.define.global.js"></script>
+  <script>
+    document.querySelector('#togglefocus').addEventListener('change', () => {
+      document.querySelectorAll('.focus').forEach(e => e.classList.toggle('hidden'));
+    })
 
-  <div class="example">
-    <h2>5. Allow Distortion</h2>
-    <auto-img
-      src="https://picsum.photos/800/600?random=5"
-      width="400px"
-      height="200px"
-      allow-distortion
-    ></auto-img>
-  </div> -->
-
-  <!-- Load the auto-define IIFE bundle -->
-  <script src="../dist/auto-img-element.define.global.js"></script>
-
+    document.querySelectorAll('input[name="hosttype"]').forEach(radio =>
+      radio.addEventListener('change', (e) => {
+        document.querySelectorAll('.webcomponent-showcase').forEach(e => e.classList.toggle('hidden'))
+        document.querySelectorAll('.htmlelement-showcase').forEach(e => e.classList.toggle('hidden'))
+      })
+    )
+  </script>
 </body>
+
 </html>

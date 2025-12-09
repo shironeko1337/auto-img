@@ -333,7 +333,6 @@ abstract class Controller {
   config: any;
 }
 
-
 type DOMControllerConfig = {
   autoPlay: boolean;
   imageSrc?: string;
@@ -354,7 +353,6 @@ type DOMControllerOutput = {
 class DOMController extends Controller {
   nextButton: HTMLButtonElement;
   newButton: HTMLButtonElement;
-  initButton: HTMLButtonElement;
   onStart?: Function;
   private configPanel: HTMLDivElement;
   private renderedElements: HTMLElement[] = [];
@@ -441,11 +439,13 @@ class DOMController extends Controller {
           <span id="computedBackgroundSize"></span>
 
           <label></label>
-          <button id="initializeTest">Initialize Test</button>
-
-          <label></label>
           <button id="startNewTest">Start New Test</button>
         </div>
+        <style id="toggleContainerBackgroundStyle">
+          #visualize-rect-image {
+            opacity:0;
+          }
+        </style>
       </div>
     `;
     this.configPanel = panel.firstElementChild as HTMLDivElement;
@@ -490,11 +490,10 @@ class DOMController extends Controller {
     this.newButton = document.querySelector(
       "#startNewTest"
     ) as HTMLButtonElement;
-    this.initButton = document.querySelector(
-      "#initializeTest"
-    ) as HTMLButtonElement;
-    this.newButton.addEventListener("click", () => this.start());
-    this.initButton.addEventListener("click", () => this.init());
+    this.newButton.addEventListener("click", () => {
+      this.init();
+      this.start();
+    });
 
     // Auto-update image dimensions when file is selected
     const autoUpdateCheckbox = this.configPanel.querySelector(
@@ -633,13 +632,12 @@ class DOMController extends Controller {
     const toggleImageBackground = document.querySelector(
       "#toggleImageBackground"
     ) as HTMLInputElement;
+    const sheet = document.getElementById(
+      "toggleContainerBackgroundStyle"
+    ) as any;
+    sheet.disabled = true;
     toggleImageBackground.addEventListener("change", () => {
-      const el = document.querySelector(
-        "#visualize-rect-image"
-      ) as HTMLDivElement;
-      if (el) {
-        el.style.opacity = toggleImageBackground.checked ? "1" : "0";
-      }
+      sheet.disabled = !sheet.disabled;
     });
   }
 

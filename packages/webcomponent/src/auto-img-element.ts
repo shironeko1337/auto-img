@@ -2,7 +2,12 @@
  * Definition and functions specific to <auto-img/> element.
  */
 import { ImagePosition } from "autoimg-core";
-import { AutoImgModel, HostAsyncAttrs, HostSyncAttrs, PixelSize } from "./base";
+import {
+  AutoImgModel,
+  getDimensionValue,
+  HostAttrs,
+  PixelSize,
+} from "./base";
 
 function getReversePctNumber(value: string) {
   return `${-Number(value.replace(/[^\d\-\.]/g, ""))}%`;
@@ -11,35 +16,35 @@ function getReversePctNumber(value: string) {
 export class AutoImgElement extends HTMLElement {
   model?: AutoImgModel;
   private img: HTMLImageElement;
-  private container: HTMLDivElement;
   declare shadowRoot: ShadowRoot;
 
   static get observedAttributes() {
     // `src` can be directly defined on <auto-img>, but for
     // general components, it's read from different properties.
-    return ["src"].concat(HostSyncAttrs).concat(HostAsyncAttrs);
+    return ["src"].concat(HostAttrs);
   }
 
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
 
-    this.container = document.createElement("div");
-    this.container.style.width = this.getAttribute("width") || "100%";
-    this.container.style.height = this.getAttribute("height") || "100%";
-    this.container.style.position = "relative";
-    this.container.style.overflow = "hidden";
+    this.style.width =
+      getDimensionValue(this.getAttribute("width")) || "100%";
+    this.style.height =
+      getDimensionValue(this.getAttribute("height")) || "100%";
+    this.style.position = "relative";
+    this.style.overflow = "hidden";
+    this.style.display = "block";
 
     this.img = document.createElement("img");
     this.img.style.position = "absolute";
     this.img.style.display = "block";
 
-    this.container.appendChild(this.img);
-    this.shadowRoot.appendChild(this.container);
+    this.shadowRoot.appendChild(this.img);
   }
 
   connectedCallback() {
-    this.model?.readSyncAttrs();
+    this.model?.readAttrs();
     this.model?.loadAndRender();
   }
 

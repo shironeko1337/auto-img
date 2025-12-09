@@ -1,5 +1,6 @@
 import { AutoImgElement } from "./auto-img-element";
-import { AutoImg } from "./auto-img-api";
+// Here we don't need the class for a singleton.
+import { autoImgAPI as AutoImgAPI } from "./auto-img-api";
 
 // Auto-register the custom element
 if (!customElements.get("auto-img")) {
@@ -8,8 +9,7 @@ if (!customElements.get("auto-img")) {
 
 // Load models for all <auto-img/> elements.
 if (typeof globalThis !== "undefined") {
-  (globalThis as any).AutoImg = AutoImg;
-  AutoImg.loadAll("auto-img");
+  AutoImgAPI.loadAll("auto-img");
 }
 
 // Attributes for auto-img element
@@ -28,8 +28,6 @@ interface AutoImgAttributes {
   "focus.tl.y"?: string;
   "focus.br.x"?: string;
   "focus.br.y"?: string;
-  "fetch-focus"?: boolean | "";
-  "fetch-upscale"?: boolean | "";
 }
 
 // TypeScript type declarations for JSX/TSX support
@@ -39,7 +37,7 @@ type JSXBase = JSX.IntrinsicElements extends { span: unknown }
 
 declare global {
   interface Window {
-    AutoImg: typeof AutoImg;
+    AutoImgAPI: typeof AutoImgAPI;
     AutoImgElement: typeof AutoImgElement;
   }
 
@@ -57,3 +55,4 @@ declare global {
 }
 
 export { AutoImgElement };
+export { AutoImgAPI };

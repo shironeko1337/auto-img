@@ -115,14 +115,43 @@ export class TouchAndRecenterCentralizer extends Centralizer {
       this.image.scale(scale, scale, focus.center);
     }
 
+    // Can we get rid of the blanks by shifting the image?
+    const topSpace = Math.max(image.tl.y, 0),
+      bottomSpace = Math.max(container.br.y - image.br.y, 0),
+      leftSpace = Math.max(image.tl.x, 0),
+      rightSpace = Math.max(container.br.x - image.br.x, 0);
+    shiftY = Math.max(
+      Math.min(bottomSpace, -image.tl.y),
+      Math.min(topSpace, image.br.y - container.br.y)
+    );
+    shiftX = Math.max(
+      Math.min(rightSpace, -image.tl.x),
+      Math.min(leftSpace, image.br.x - container.br.x)
+    );
+
+    image.shift(shiftX, shiftY);
+    await visualizer(this.image, "position adjusted to remove blank space");
+
+    // At this step, if we still can't remove the blanks, but distortion is allowed
+    // we stretch the image to fill in the blanks.
+
     if (allowDistortion) {
       await visualizer(this.image, "focus stretched");
-      let scaleX = (container.width - 2 * padding) / focus.width;
-      let scaleY = (container.height - 2 * padding) / focus.height;
+      let scaleY =
+        (Math.max(image.tl.y, 0) +
+          Math.max(container.br.y - image.br.y, 0) +
+          image.height) /
+        image.height;
+      let scaleX =
+        (Math.max(image.tl.x, 0) +
+          Math.max(container.br.x - image.br.x, 0) +
+          image.width) /
+        image.width;
+
       this.image.scale(scaleX, scaleY, focus.center);
       await visualizer(
         this.image,
-        "focus filled container with padding",
+        "image stretched to remove blank space",
         "end"
       );
     } else {

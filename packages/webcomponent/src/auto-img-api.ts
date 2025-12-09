@@ -22,6 +22,8 @@ export class AutoImgAPI {
   };
 
   private elementModelMap: Map<HTMLElement, AutoImgModel> = new Map();
+  // Cache for removed elements - allows restoration when re-added to DOM
+  private removedElementCache: Map<HTMLElement, AutoImgModel> = new Map();
   // For remove resize listener on element remove.
   private mutationObserver: MutationObserver | null = null;
   // For auto resize on resizing event.
@@ -60,11 +62,9 @@ export class AutoImgAPI {
    */
   loadAll(selector = "[data-auto-img]") {
     const onload = () => {
-      document.querySelectorAll(selector).forEach((e) => {
-        const model = this.attachModel(e as HTMLElement);
-        model.readSyncAttrs();
-        model.loadAndRender();
-      });
+      document
+        .querySelectorAll(selector)
+        .forEach((e) => this.load(e as HTMLElement));
     };
 
     if (document.readyState === "loading") {
@@ -72,6 +72,12 @@ export class AutoImgAPI {
     } else {
       onload();
     }
+  }
+
+  load(element: HTMLElement) {
+    const model = this.attachModel(element);
+    model.readAttrs();
+    model.loadAndRender();
   }
 
   /**
@@ -94,7 +100,7 @@ export class AutoImgAPI {
       model = this.elementModelMap.get(element)!;
     }
 
-    model.readSyncAttrs();
+    model.readAttrs();
     model.defer = false;
 
     if (waitResize) {
@@ -133,6 +139,12 @@ export class AutoImgAPI {
     }
   };
 
+  /**
+   * Watch the resizing event of an element, calling this function on a
+   * non-deferred element could eventually cause it to be rendered since
+   * resizeObserver handler would trigger the resizeState to be in a stable
+   * value, then trigger onStable callback in the model.
+   */
   private watch(element: HTMLElement, model: AutoImgModel) {
     this.resizeObserver.observe(element);
     this.elementModelMap.set(element, model);
@@ -140,11 +152,14 @@ export class AutoImgAPI {
 
   private unwatch(element: HTMLElement) {
     this.resizeObserver.unobserve(element);
+    this.removedElementCache.set(element, this.elementModelMap.get(element)!);
     this.elementModelMap.delete(element);
   }
 
   /**
-   * Set up MutationObserver to clean up model and map entries on element remove.
+   * Set up MutationObserver, a mutationObserver is for controlling which
+   * elements we should watch resizing. There is a cache mechanism to prevent
+   * loading image again for those removed and then added back elements.
    */
   private setupMutationObserver(): void {
     this.mutationObserver = new MutationObserver((mutations) => {
@@ -152,6 +167,17 @@ export class AutoImgAPI {
         mutation.removedNodes.forEach((node) => {
           if (node instanceof HTMLElement && this.elementModelMap.has(node)) {
             this.unwatch(node);
+          }
+        });
+
+        mutation.addedNodes.forEach((node) => {
+          if (
+            node instanceof HTMLElement &&
+            this.removedElementCache.has(node)
+          ) {
+            const model = this.removedElementCache.get(node)!;
+            this.removedElementCache.delete(node);
+            this.watch(node, model);
           }
         });
       }
@@ -164,4 +190,4 @@ export class AutoImgAPI {
   }
 }
 
-export const AutoImg = new AutoImgAPI();
+export const autoImgAPI = new AutoImgAPI();

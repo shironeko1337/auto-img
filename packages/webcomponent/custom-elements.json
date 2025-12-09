@@ -199,24 +199,6 @@
               "description": "Minimum padding around focus area in pixels (e.g., '20' or '20px')",
               "default": "\"0\"",
               "fieldName": "padding"
-            },
-            {
-              "name": "fetch-focus",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Fetch focus data from remote server using src",
-              "default": "false",
-              "fieldName": "fetch-focus"
-            },
-            {
-              "name": "fetch-upscale",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Fetch upscaled image from remote server",
-              "default": "false",
-              "fieldName": "fetch-upscale"
             }
           ],
           "superclass": {

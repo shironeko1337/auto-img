@@ -58,16 +58,11 @@ export class MutableState<T> {
 }
 
 /**
- * Those attributes can be only be read asynchronously from the host element.
- * As an element with width and height set in pixels can still render at a
- * different size.
- */
-export const HostAsyncAttrs = ["width", "height"];
-
-/**
  * Those attributes can be read synchronously from the host element.
  */
-export const HostSyncAttrs = [
+export const HostAttrs = [
+  "width",
+  "height",
   "focus",
   "focus.tl",
   "focus.tl.x",
@@ -84,8 +79,50 @@ export const HostSyncAttrs = [
   "fetchUpscale",
 ];
 
-function getTruthyAttrValue(attrValue: string | null): boolean {
-  return attrValue === null || attrValue === "false" ? false : true;
+function isDimensionValue(value: string) {
+  if (typeof value !== "string") return false;
+
+  // List of CSS length units
+  const units = [
+    "px",
+    "em",
+    "rem",
+    "vw",
+    "vh",
+    "vmin",
+    "vmax",
+    "cm",
+    "mm",
+    "in",
+    "pt",
+    "pc",
+    "q",
+    "%",
+  ];
+
+  // Build a regex: optional sign, number (int or decimal), optional unit
+  const unitPattern = units.join("|");
+  const regex = new RegExp(`^[-+]?\\d*\\.?\\d+(?:${unitPattern})?$`, "i");
+
+  return regex.test(value.trim());
+}
+
+/**
+ * Return a dimension string in px if it's a numeric value, otherwise return the original value.
+ */
+export function getDimensionValue(attrValue: string | number | null): string {
+  attrValue = `${attrValue}`;
+  const numVal = parseFloat(attrValue);
+  if (!Number.isNaN(numVal)) {
+    return numVal + "px";
+  }
+  return isDimensionValue(attrValue) ? attrValue : "";
+}
+
+function getTruthyAttrValue(attrValue: string | null | undefined): boolean {
+  return attrValue === undefined || attrValue === null || attrValue === "false"
+    ? false
+    : true;
 }
 
 function camelToDash(str: string): string {
@@ -112,7 +149,7 @@ function getFocus(input: any) {
     [tlx, tly] = input["focus.tl"].split(",");
     [brx, bry] = input["focus.br"].split(",");
   }
-
+  [tlx, tly, brx, bry] = [tlx, tly, brx, bry].map(parseFloat);
   return new Rect(new Point(tlx, tly), new Point(brx, bry));
 }
 
@@ -144,7 +181,7 @@ export class AutoImgModel {
     this.config = api.config;
     const state = new MutableState<PixelSize>(this.config.resizeThrottle);
     state.setOnResize(() => (this.isSizeSteady = false));
-    state.setOnResizeStable(this.onSizeSteady);
+    state.setOnResizeStable(this.onSizeSteady.bind(this));
     this.resizeState = state;
 
     if (this.host.tagName === "AUTO-IMG") {
@@ -155,8 +192,8 @@ export class AutoImgModel {
   /**
    * Read attributes and possibly render later (if it's not "deferred").
    *
-   * 1. Read sync attrs from elements
-   * 2. Start loading image and read async attrs in callbacks.
+   * 1. Read attrs from elements.
+   * 2. Start loading image.
    *    When placeholder is present, load placeholder then load image.
    * 3. Define on load complete callbacks.
    */
@@ -216,35 +253,50 @@ export class AutoImgModel {
 
   onSizeSteady(containerSize: PixelSize) {
     this.isSizeSteady = true;
-    this.centralizerInput.viewHeight = containerSize.height;
-    this.centralizerInput.viewWidth = containerSize.height;
+    this.centralizerInput.viewHeight ||= containerSize.height;
+    this.centralizerInput.viewWidth ||= containerSize.width;
     if (!this.defer && !this.config.defer) {
       this.render();
     }
   }
 
   /**
-   * Read sync attributes from host, and assign them to proper fields of the model.
+   * Read attributes from host, and assign them to proper fields of the model.
    */
-  readSyncAttrs() {
+  readAttrs() {
     const attrs: any = {};
     const host = this.host;
+    const isHTMLElement = host.tagName !== "AUTO-IMG";
 
-    HostSyncAttrs.forEach((attrCamelCaseName) => {
+    HostAttrs.forEach((attrCamelCaseName) => {
       const attr = camelToDash(attrCamelCaseName);
-      const attrName = host.tagName === "AUTO-IMG" ? attr : `data-${attr}`;
+      const attrName = isHTMLElement ? `data-auto-img-${attr}` : attr;
       if (host.hasAttribute(attrName)) {
         const attrValue = host.getAttribute(attrName);
         attrs[attrCamelCaseName] = attrValue;
       }
     });
 
+    // we rely on the stable size unless width and height are exactly set to
+    // a pixel value ('100px' and '100' both counts).
+    const numericWidth = parseFloat(attrs.width?.replace('px',''));
+    const numericHeight = parseFloat(attrs.height?.replace('px',''));
+    
+    if (!Number.isNaN(numericWidth)){
+      this.centralizerInput.viewWidth = numericWidth;
+    }
+    if (!Number.isNaN(numericHeight)){
+      this.centralizerInput.viewHeight = numericHeight;
+    }
+
+    this.isSizeSteady =
+      !!this.centralizerInput.viewHeight && !!this.centralizerInput.viewWidth;
     this.centralizerInput.focus = getFocus(attrs);
     this.centralizerInput.allowDistortion = getTruthyAttrValue(
       attrs.allowDistortion
     );
     this.centralizerInput.config = {
-      padding: attrs.padding,
+      padding: parseFloat(attrs.padding),
     };
 
     let src = "";
@@ -288,12 +340,12 @@ export class AutoImgModel {
         input.imageWidth!,
         input.imageHeight!
       );
-      const focusRect = input.focus;
+      const focusRect = input.focus?.copy();
       const image = new AutoImage(imageRect, focusRect);
       const allowDistortion = input.allowDistortion || false;
       const centralizer: TouchAndRecenterCentralizer =
         new TouchAndRecenterCentralizer(image, containerRect);
-      await centralizer.transform(allowDistortion, input.config);
+      await centralizer.transform(allowDistortion, { ...input.config });
       this.setPosition(centralizer.getPosition());
     } else {
       // TODO error handling
