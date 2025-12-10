@@ -79,7 +79,12 @@ Properties that doesn't exist:
 - [ ] Publish React npm bundle and setup pipeline.
 - [ ] Further optimizations, more friendly API? get faster? Different version of images based on container size? Using a self hosting website and AI to auto find focus or auto upscaling?...
 
-
+# Hot patches
+- [ ] If background is provided as `[data-auto-img-src]` in html element, it should override `background-image` style.
+- [ ] Fix visualize animation.
+- [ ] Allow another format of focus to be defined  `focus="200,300"`, it's the coordinates of the focus center, and in that case, the focus area is the largest rectangle with the same w/h ratio of the image.
+- [ ] Adjust the design to have codesandbox demo only for the easiest use case, for all other cases, use a full page, see if there are MDX plugin available to show highlighted code.
+- [ ] Not sure what's the best practice for wrapping a library, now both API singleton and Element type are wrapped in a namespace, how do we want to wrap the react and vue libraries?
 
 ```html
 <auto-img src="..." width="200" height="200" />
