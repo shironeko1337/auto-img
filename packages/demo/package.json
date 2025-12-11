@@ -1,0 +1,22 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "build:js": "tsup",
+    "build:css": "tailwindcss -i ./styles.css -o ./dist/styles.css --minify",
+    "build": "npm run build:js && npm run build:css",
+    "build:watch": "tsup --watch & tailwindcss -i ./styles.css -o ./dist/styles.css --watch",
+    "demo": "npm run build && npx serve .",
+    "demo:watch": "npm run build:watch"
+  },
+  "dependencies": {
+    "autoimg-webcomponent": "*"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.17"
+  }
+}

@@ -1,0 +1,13 @@
+import { defineConfig } from "tsup";
+
+export default defineConfig({
+  entry: {
+    "auto-img-element.define": "./index.ts",
+  },
+  format: ["iife"],
+  globalName: "AutoImg",
+  outDir: "dist",
+  outExtension: () => ({ js: ".global.js" }),
+  minify: false,
+  clean: true,
+});

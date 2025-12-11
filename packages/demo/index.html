@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>AutoImg Demo</title>
+  <link rel="stylesheet"
+        href="/dist/styles.css">
+</head>
+
+<body>
+  <div id="menu"
+       class="hover-lift-container bg1 h-full min-h-screen fxc-ss p-8 gap-6 w-[450px] min-w-[200px] overflow-auto ft-headline">
+    <div class="fx-bc gap-8 w-full">
+      <div class="title ">
+        <span>AutoImg</span>&nbsp;v<span>0.1</span>
+        <iconify-icon class="icon"
+                      icon="mdi:github"></iconify-icon>
+        <iconify-icon class="icon cursor-pointer"
+                      icon="line-md:light-dark"></iconify-icon>
+      </div>
+      <div>
+        <iconify-icon id="togglemenuicon"
+                      class="icon cursor-pointer"
+                      icon="icon-park-outline:left-c"></iconify-icon>
+      </div>
+    </div>
+    <div><a href="#">Quick Start</a></div>
+    <div><a href="#">Install</a></div>
+    <div class="no-hover-lift fx-bc w-full controller"
+         data-control="showcaseitems">
+      <span>Showcase</span>
+      <iconify-icon data-controller-icon
+                    class="icon cursor-pointer"
+                    icon="ic:baseline-expand-more"></iconify-icon>
+    </div>
+    <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
+         id="showcaseitems">
+      <div><a href="#">Image with fixed size</a></div>
+      <div><a href="#">Image filled in the container</a></div>
+      <div><a href="#">Image staying focused when resizing</a></div>
+    </div>
+    <div class="menu-item-after-list"><a href="#">Playground</a></div>
+    <div><a href="#">API</a></div>
+  </div>
+  <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+  <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <script src="/dist/auto-img-element.define.global.js"></script>
+  <style>
+    #menu span {
+      cursor: default;
+    }
+
+    .controlled {
+      overflow: hidden;
+      height: 0;
+      transition: height 0.5s ease;
+    }
+
+    .controlled.controlled-opened {
+      display: flex;
+      height: 7rem;
+    }
+
+    .reversed {
+      transform: rotate(180deg);
+    }
+
+    #togglemenuicon {
+      transition: transform,left 0.5s ease;
+    }
+
+    .toggle-menu-icon-detached {
+      transform: rotate(180deg);
+    }
+
+    .controlled:not(.controlled-opened)~.menu-item-after-list {
+      margin-top: -1.5rem;
+    }
+
+    #menu {
+      transition: transform 0.5s ease;
+    }
+
+    .menu-closed {
+      transform: translateX(-100%);
+    }
+  </style>
+  <script>
+    const THEME_KEY = 'color-theme';
+    const root = document.documentElement;
+
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (savedTheme) {
+      root.style.colorScheme = savedTheme;
+    } else {
+      root.style.colorScheme = 'light dark'; // Use system preference
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // toggle light & dark
+      const toggle = document.querySelector('iconify-icon[icon="line-md:light-dark"]');
+      if (toggle) {
+        toggle.style.cursor = 'pointer';
+        toggle.addEventListener('click', () => {
+          const currentScheme = getComputedStyle(root).colorScheme;
+          const isDark = currentScheme.includes('dark');
+          const newTheme = isDark ? 'light' : 'dark';
+
+          root.style.colorScheme = newTheme;
+          localStorage.setItem(THEME_KEY, newTheme);
+        });
+      }
+
+      // shrink/open sub menu
+      document.querySelectorAll('.controller').forEach(e => {
+        e.addEventListener('click', () => {
+          document.querySelector(`#${e.getAttribute('data-control')}`)?.classList.toggle('controlled-opened');
+          e.querySelector('[data-controller-icon]').classList.toggle('reversed');
+        })
+      })
+
+      //shrink/open menu
+      // we need it to be positioned as if it is in the original location but actually it's not
+      const menuEl = document.querySelector('#menu');
+      let menuOpened = true, toggleMenuLeft;
+      const toggleMenuEl = document.querySelector('#togglemenuicon');
+      const { left, top } = toggleMenuEl.getBoundingClientRect();
+      toggleMenuEl.style.position = 'fixed';
+      toggleMenuEl.style.top = top + 'px';
+      toggleMenuLeft = toggleMenuEl.style.left = left + 'px';
+      document.body.appendChild(toggleMenuEl)
+
+      toggleMenuEl.addEventListener('click', () => {
+        if (menuOpened) {
+          toggleMenuEl.style.left = '50px';
+        } else {
+          toggleMenuEl.style.left = toggleMenuLeft;
+        }
+
+        menuEl.classList.toggle('menu-closed')
+        toggleMenuEl.classList.toggle('reversed')
+        menuOpened = !menuOpened;
+      });
+    });
+  </script>
+</body>
+
+</html>

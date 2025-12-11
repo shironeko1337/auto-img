@@ -1,0 +1,294 @@
+/**
+ * Small CSS utility library for fast prototyping with tailwindcss v4.
+ */
+@import "tailwindcss";
+
+@layer base {
+  /* Flexbox base: fx = row, fxc = column */
+  /* Format: .fx[c]-[justify][align] */
+  /* justify: c=center, s=start, e=end, b=between */
+  /* align: c=center, s=start, e=end */
+
+  /* Flex row - justify center */
+  .fx-cc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .fx-cs {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .fx-ce {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  /* Flex row - justify start */
+  .fx-sc {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .fx-ss {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .fx-se {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+  /* Flex row - justify end */
+  .fx-ec {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .fx-es {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  .fx-ee {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  /* Flex row - justify space-between */
+  .fx-bc {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fx-bs {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .fx-be {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  /* Flex column - justify center */
+  .fxc-cc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .fxc-cs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .fxc-ce {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  /* Flex column - justify start */
+  .fxc-sc {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .fxc-ss {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .fxc-se {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+  /* Flex column - justify end */
+  .fxc-ec {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .fxc-es {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  .fxc-ee {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  /* Flex column - justify space-between */
+  .fxc-bc {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fxc-bs {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .fxc-be {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .ft-content {
+    font-family: var(--font-content);
+  }
+  .ft-headline {
+    font-family: var(--font-headline);
+  }
+
+  .bg-full {
+    background-size: 100% 100%;
+    background-position: center;
+  }
+}
+
+@layer component {
+  .btn-base {
+    background-color: var(--color-button);
+    color: var(--color-button-text);
+    @apply relative flex justify-center items-center whitespace-nowrap cursor-pointer border-none;
+  }
+
+  .btn-base.btn-md {
+    @apply rounded-md;
+    padding: 1.75vh 3.5vh;
+    font-size: 1.75;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-base.btn-lg {
+    padding: 2vh 4vh;
+    font-size: 2vh;
+    letter-spacing: 0.5px;
+  }
+}
+
+@layer components {
+  .container {
+    @apply relative w-full flex flex-col gap-8;
+  }
+
+  .icon {
+    font-size: 36px;
+    @apply flex-shrink-0;
+  }
+
+  .container > * {
+    @apply max-w-[95vw];
+  }
+}
+
+@layer utilities {
+  .title {
+    font-family: var(--font-headline);
+    @apply text-4xl;
+    color: var(--color-headline);
+  }
+
+  .subtitle {
+    @apply text-2xl;
+  }
+
+  .desc {
+    @apply text-base;
+  }
+
+  .inverted {
+    filter: invert(0.87);
+  }
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  /* Light mode → Dark mode */
+  --color-background: light-dark(#faeee7, #1a1315);
+  --color-button: light-dark(#ff8ba7, #ff9bb5);
+  --color-button-text: light-dark(#33272a, #1a1315);
+  --color-headline: light-dark(#33272a, #f5ede6);
+  --color-paragraph: light-dark(#594a4e, #d4c5ca);
+  --color-stroke: light-dark(#594a4e, #a49096);
+  --color-main: light-dark(#fffffe, #2d2328);
+  --color-highlight: light-dark(#ff8ba7, #ff9bb5);
+  --color-secondary: light-dark(#ffc6c7, #8b5560);
+  --color-tertiary: light-dark(#c3f0ca, #4a6b50);
+  --color-card-background: light-dark(#fffffe, #3a2f34);
+  --color-card-headline: light-dark(#33272a, #f5ede6);
+  --color-card-paragraph: light-dark(#594a4e, #d4c5ca);
+  --color-tag-paragraph: light-dark(#594a4e, #d4c5ca);
+  --font-content: "Roboto", sans-serif;
+  --font-headline: "Fredoka", sans-serif;
+}
+
+.bg1 {
+  background: var(--color-background);
+}
+
+.bg2 {
+  background: var(--color-secondary);
+}
+
+.bg3 {
+  background: var(--color-tertiary);
+}
+
+body {
+  background-color: var(--color-main);
+  font-family: var(--font-content);
+}
+
+svg,
+svg path {
+  stroke: var(--color-stroke);
+}
+
+p {
+  color: var(--color-paragraph);
+}
+
+.hover-lift-container > *:not(.no-hover-lift),
+.hover-lift {
+  transition: transform 0.5s ease, text-shadow 0.3s ease;
+  transform-origin: bottom center;
+}
+
+.hover-lift-container > *:not(.no-hover-lift):hover,
+.hover-lift:hover {
+  transform: translateY(-1px);
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.box-hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
