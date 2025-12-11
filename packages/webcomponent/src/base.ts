@@ -253,8 +253,8 @@ export class AutoImgModel {
 
   onSizeSteady(containerSize: PixelSize) {
     this.isSizeSteady = true;
-    this.centralizerInput.viewHeight ||= containerSize.height;
-    this.centralizerInput.viewWidth ||= containerSize.width;
+    this.centralizerInput.viewHeight = containerSize.height;
+    this.centralizerInput.viewWidth = containerSize.width;
     if (!this.defer && !this.config.defer) {
       this.render();
     }
@@ -281,7 +281,7 @@ export class AutoImgModel {
     // a pixel value ('100px' and '100' both counts).
     const numericWidth = parseFloat(attrs.width?.replace('px',''));
     const numericHeight = parseFloat(attrs.height?.replace('px',''));
-    
+
     if (!Number.isNaN(numericWidth)){
       this.centralizerInput.viewWidth = numericWidth;
     }

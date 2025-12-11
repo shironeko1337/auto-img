@@ -14,74 +14,65 @@
   <div class="fx-ss w-full">
 
     <div id="menu"
-         class="hover-lift-container bg1 h-full min-h-screen fxc-ss p-8 gap-6 w-[450px] min-w-[200px] overflow-auto ft-headline">
-      <div class="fx-bc gap-8 w-full">
+         class="menu hover-lift-container bg1 h-[-webkit-fill-available] min-h-screen fxc-ss gap-6 w-[400px] overflow-auto ft-headline">
+      <div class="fx-bc gap-8 w-full p-4">
         <div class="title ">
           <span>AutoImg</span>&nbsp;v<span>0.1</span>
-          <iconify-icon class="icon"
+          <iconify-icon class="text-xl"
                         icon="mdi:github"></iconify-icon>
-          <iconify-icon class="icon cursor-pointer"
+          <iconify-icon class="text-xl cursor-pointer"
                         icon="line-md:light-dark"></iconify-icon>
         </div>
-        <div>
-          <iconify-icon id="togglemenuicon"
-                        class="icon cursor-pointer"
-                        icon="icon-park-outline:left-c"></iconify-icon>
-        </div>
-      </div>
-      <div><a href="#">Quick Start</a></div>
-      <div><a href="#">Install</a></div>
-      <div class="no-hover-lift fx-bc w-full controller"
-           data-control="showcaseitems">
-        <span>Showcase</span>
-        <iconify-icon data-controller-icon
+        <iconify-icon id="togglemenuicon"
                       class="icon cursor-pointer"
-                      icon="ic:baseline-expand-more"></iconify-icon>
+                      icon="icon-park-outline:left-c"></iconify-icon>
       </div>
-      <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
-           id="showcaseitems">
-        <div><a href="#">Image with fixed size</a></div>
-        <div><a href="#">Image filled in the container</a></div>
-        <div><a href="#">Image staying focused when resizing</a></div>
+      <div class="p-4 fxc-ss gap-4 w-full">
+        <div><a href="#">Quick Start</a></div>
+        <div><a href="#">Install</a></div>
+        <div class="no-hover-lift fx-bc w-full controller"
+             data-control="showcaseitems">
+          <span>Showcase</span>
+          <iconify-icon data-controller-icon
+                        class="icon cursor-pointer"
+                        icon="ic:baseline-expand-more"></iconify-icon>
+        </div>
+        <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
+             id="showcaseitems">
+          <div><a href="#">Image with fixed size</a></div>
+          <div><a href="#">Image filled in the container</a></div>
+          <div><a href="#">Image staying focused when resizing</a></div>
+        </div>
+        <div class="menu-item-after-list"><a href="#">Playground</a></div>
+        <div><a href="#">API</a></div>
       </div>
-      <div class="menu-item-after-list"><a href="#">Playground</a></div>
-      <div><a href="#">API</a></div>
     </div>
 
     <div id="content"
          class="w-full min-h-screen fxc-sc">
-      <div class="fxc-sc text-left w-[60%] gap-8">
-        <div class="fx-bc gap-20 w-full"
-             id="imagewithfixedsize">
-          <div class="fxc-ss max-w-[50vmin] gap-4">
-            <div class="title font-bold">Image with fixed size</div>
-            <div class="desc">Here is an example of an 800 × 600 image in a 200 × 200 container.
-            </div>
-            <p>
-            <pre><code class="language-html">&lt;auto-img
-  src="https://fastly.picsum.photos/id/200/800/600.jpg?
-  hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
-  width="200"
-  height="200"
-  focus="27,235;452,490"
-  padding="10"&gt;&lt;/auto-img&gt;</code></pre>
-            </p>
-            <div class="fx-sc gap-4">
-              <button class="btn btn-md hover-lift" onclick="document.querySelector('#imagewithfixedsize-original').classList.toggle('hidden')">Toggle original image</button>
-            </div>
+      <div class="fxc-sc text-left w-[70%] gap-16">
+        <div class="fxc-ss w-full gap-4">
+          <div class="title font-medium">
+            Showcase
           </div>
-          <div class="fxc-cc">
-            <div style="border: 2px solid var(--color-paragraph); box-sizing: border-box;">
-              <auto-img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
-                        width="200"
-                        height="200"
-                        focus="27,235;452,490"
-                        padding="10"></auto-img>
-            </div>
+          <div class="desc">
+            <p>
+              Here are several examples using an 800 × 600 image of a predefined focus area.
+            </p>
+            <p>
+              For all examples below, the image is not stretched.
+            </p>
+
+          </div>
+          <div class="fx-sc gap-4">
+            <button class="btn btn-md hover-lift"
+                    onclick="document.querySelector('#imagewithfixedsize-original').classList.toggle('hidden')">Toggle
+              original image</button>
           </div>
         </div>
-        <div class="fxc-cs gap-4 w-full" id="imagewithfixedsize-original">
-          <div class="title">Original Image with focus</div>
+        <div class="fxc-cs gap-4 w-full hidden"
+             id="imagewithfixedsize-original">
+          <div class="title font-medium">Original Image with focus</div>
           <div class="relative"
                style="position:relative">
             <div class="absolute border-box"
@@ -93,7 +84,98 @@
                  height="600" />
           </div>
         </div>
+        <div class="fx-bc gap-20 w-full"
+             id="imagewithfixedsize">
+          <div class="fxc-ss max-w-[50vmin] gap-4">
+            <div class="title font-medium">Image with fixed size</div>
+            <div class="desc">Example usage in a 200 × 200 container.
+            </div>
+            <p>
+            <pre><code class="language-html">&lt;auto-img
+  src="https://fastly.picsum.photos/id/200/800/600.jpg?
+  hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+  width="200"
+  height="200"
+  focus="27,235;452,490"
+  padding="10"&gt;&lt;/auto-img&gt;</code></pre>
+            </p>
+          </div>
+          <div class="fxc-cc">
+            <div class="bordered">
+              <auto-img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                        width="200"
+                        height="200"
+                        focus="27,235;452,490"
+                        padding="10"></auto-img>
+            </div>
+          </div>
+        </div>
 
+        <div class="fx-bc gap-20 w-full"
+             id="imagefilledinthecontainer">
+          <div class="fxc-ss max-w-[50vmin] gap-4">
+            <div class="title font-medium">Image filled in the container</div>
+            <div class="desc">Example usage in a container with uncertain size.
+            </div>
+            <p>
+            <pre><code class="language-html">&lt;auto-img
+  src="https://fastly.picsum.photos/id/200/800/600.jpg?
+  hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+  focus="27,235;452,490"
+  padding="10"&gt;&lt;/auto-img&gt;</code></pre>
+            </p>
+          </div>
+          <div class="fxc-cc">
+            <div style="display: flex; flex-direction: column; height: 300px;">
+              <div class="bg-gray-200">Guess how high I am?</div>
+              <div class="bordered"
+                   style="width:100%;height:100%;">
+                <auto-img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                          focus="27,235;452,490"
+                          padding="10"></auto-img>
+              </div>
+              <div class="bg-gray-200"
+                   style="display: block; height: 100px;">Guess how high I am again? And what about
+                width?</div>
+            </div>
+          </div>
+        </div>
+        <div class="fx-bc gap-20 w-full"
+             id="imagestayingfocusedwhenresizing">
+          <div class="fxc-ss max-w-[50vmin] gap-4">
+            <div class="title font-medium">Image staying focused when resizing</div>
+            <div class="desc">Example usage in a responsive container with
+              <p>height of <input class="text-end w-[100px] bordered"
+                       type="number"
+                       value="200"
+                       name="height"
+                       onchange="document.querySelector('#resizablecontainer').style.height=this.value+'px'" />
+                px and width of <input class="text-end w-[100px] bordered"
+                       type="number"
+                       value="200"
+                       name="width"
+                       onchange="document.querySelector('#resizablecontainer').style.width=this.value+'px'" />
+                px. </p>
+            </div>
+            <p>
+            <pre><code class="language-html">&lt;auto-img
+  src="https://fastly.picsum.photos/id/200/800/600.jpg?
+  hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+  focus="27,235;452,490"
+  padding="10"&gt;&lt;/auto-img&gt;</code></pre>
+            </p>
+          </div>
+          <div class="fxc-cc">
+            <div id="resizablecontainer">
+              <div class="bordered"
+                   style="width:100%;height:100%;">
+                <auto-img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                          focus="27,235;452,490"
+                          padding="10"></auto-img>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -117,6 +199,11 @@
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
   <script src="/dist/auto-img-element.define.global.js"></script>
   <style>
+    #resizablecontainer {
+      width: 200px;
+      height: 200px;
+    }
+
     .hidden {
       display: none;
     }
@@ -152,13 +239,14 @@
       margin-top: -1.5rem;
     }
 
-    #menu {
-      transition: transform 0.5s ease;
+    .menu {
+      transition: width 0.5s ease;
       flex-shrink: 0;
+      overflow: hidden;
     }
 
-    .menu-closed {
-      transform: translateX(-100%);
+    .menu.menu-closed {
+      width: 0;
     }
   </style>
   <script>

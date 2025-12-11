@@ -273,7 +273,7 @@ svg path {
   stroke: var(--color-stroke);
 }
 
-p {
+.desc, p {
   color: var(--color-paragraph);
 }
 
@@ -292,4 +292,8 @@ p {
 .box-hover-lift:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.bordered {
+  border: 2px solid var(--color-paragraph); box-sizing: border-box;
 }

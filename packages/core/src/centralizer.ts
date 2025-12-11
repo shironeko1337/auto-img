@@ -129,7 +129,7 @@ export class TouchAndRecenterCentralizer extends Centralizer {
       Math.min(leftSpace, image.br.x - container.br.x)
     );
 
-    image.shift(shiftX, shiftY);
+    image.shift(-shiftX, -shiftY);
     await visualizer(this.image, "position adjusted to remove blank space");
 
     // At this step, if we still can't remove the blanks, but distortion is allowed
