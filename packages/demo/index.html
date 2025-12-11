@@ -11,39 +11,63 @@
 </head>
 
 <body>
-  <div id="menu"
-       class="hover-lift-container bg1 h-full min-h-screen fxc-ss p-8 gap-6 w-[450px] min-w-[200px] overflow-auto ft-headline">
-    <div class="fx-bc gap-8 w-full">
-      <div class="title ">
-        <span>AutoImg</span>&nbsp;v<span>0.1</span>
-        <iconify-icon class="icon"
-                      icon="mdi:github"></iconify-icon>
-        <iconify-icon class="icon cursor-pointer"
-                      icon="line-md:light-dark"></iconify-icon>
+  <div class="fx w-full">
+
+    <div id="menu"
+         class="hover-lift-container bg1 h-full min-h-screen fxc-ss p-8 gap-6 w-[450px] min-w-[200px] overflow-auto ft-headline">
+      <div class="fx-bc gap-8 w-full">
+        <div class="title ">
+          <span>AutoImg</span>&nbsp;v<span>0.1</span>
+          <iconify-icon class="icon"
+                        icon="mdi:github"></iconify-icon>
+          <iconify-icon class="icon cursor-pointer"
+                        icon="line-md:light-dark"></iconify-icon>
+        </div>
+        <div>
+          <iconify-icon id="togglemenuicon"
+                        class="icon cursor-pointer"
+                        icon="icon-park-outline:left-c"></iconify-icon>
+        </div>
       </div>
-      <div>
-        <iconify-icon id="togglemenuicon"
+      <div><a href="#">Quick Start</a></div>
+      <div><a href="#">Install</a></div>
+      <div class="no-hover-lift fx-bc w-full controller"
+           data-control="showcaseitems">
+        <span>Showcase</span>
+        <iconify-icon data-controller-icon
                       class="icon cursor-pointer"
-                      icon="icon-park-outline:left-c"></iconify-icon>
+                      icon="ic:baseline-expand-more"></iconify-icon>
+      </div>
+      <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
+           id="showcaseitems">
+        <div><a href="#">Image with fixed size</a></div>
+        <div><a href="#">Image filled in the container</a></div>
+        <div><a href="#">Image staying focused when resizing</a></div>
+      </div>
+      <div class="menu-item-after-list"><a href="#">Playground</a></div>
+      <div><a href="#">API</a></div>
+    </div>
+
+    <div id="content"
+         class="w-full min-h-screen">
+      <div class="fxc-sc">
+        <div class="fx-cc">
+          <div class="fxc-sc">
+            <div class="title">Image with fixed size</div>
+            <div class="desc">Say we have an 800 × 600 image, and we it to fit in a 200 × 200
+              container</div>
+          </div>
+          <div>
+            <auto-img class="webcomponent-showcase"
+                      src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                      width="200"
+                      height="200"
+                      focus="27,235;452,490"
+                      padding="10"></auto-img>
+          </div>
+        </div>
       </div>
     </div>
-    <div><a href="#">Quick Start</a></div>
-    <div><a href="#">Install</a></div>
-    <div class="no-hover-lift fx-bc w-full controller"
-         data-control="showcaseitems">
-      <span>Showcase</span>
-      <iconify-icon data-controller-icon
-                    class="icon cursor-pointer"
-                    icon="ic:baseline-expand-more"></iconify-icon>
-    </div>
-    <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
-         id="showcaseitems">
-      <div><a href="#">Image with fixed size</a></div>
-      <div><a href="#">Image filled in the container</a></div>
-      <div><a href="#">Image staying focused when resizing</a></div>
-    </div>
-    <div class="menu-item-after-list"><a href="#">Playground</a></div>
-    <div><a href="#">API</a></div>
   </div>
   <link rel="preconnect"
         href="https://fonts.googleapis.com">
@@ -75,7 +99,7 @@
     }
 
     #togglemenuicon {
-      transition: transform,left 0.5s ease;
+      transition: transform, left 0.5s ease;
     }
 
     .toggle-menu-icon-detached {
