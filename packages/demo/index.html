@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <div class="fx w-full">
+  <div class="fx-ss w-full">
 
     <div id="menu"
          class="hover-lift-container bg1 h-full min-h-screen fxc-ss p-8 gap-6 w-[450px] min-w-[200px] overflow-auto ft-headline">
@@ -49,23 +49,51 @@
     </div>
 
     <div id="content"
-         class="w-full min-h-screen">
-      <div class="fxc-sc">
-        <div class="fx-cc">
-          <div class="fxc-sc">
+         class="w-full min-h-screen fxc-sc">
+      <div class="fxc-sc text-left w-[60%] gap-8">
+        <div class="fx-bc gap-20 w-full"
+             id="imagewithfixedsize">
+          <div class="fxc-ss max-w-[50vmin] gap-4">
             <div class="title">Image with fixed size</div>
-            <div class="desc">Say we have an 800 × 600 image, and we it to fit in a 200 × 200
-              container</div>
+            <div class="desc">Here is an example of a 800 × 600 image in a 200 × 200 container.
+            </div>
+            <p>
+            <pre><code class="language-html">&lt;auto-img
+  src="https://fastly.picsum.photos/id/200/800/600.jpg?
+  hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+  width="200"
+  height="200"
+  focus="27,235;452,490"
+  padding="10"&gt;&lt;/auto-img&gt;</code></pre>
+            </p>
+            <div class="fx-sc gap-4">
+              <button class="btn btn-md hover-lift" onclick="document.querySelector('#imagewithfixedsize-original').classList.toggle('hidden')">Toggle original image</button>
+            </div>
           </div>
-          <div>
-            <auto-img class="webcomponent-showcase"
-                      src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
-                      width="200"
-                      height="200"
-                      focus="27,235;452,490"
-                      padding="10"></auto-img>
+          <div class="fxc-cc">
+            <div style="border: 2px solid var(--color-paragraph); box-sizing: border-box;">
+              <auto-img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                        width="200"
+                        height="200"
+                        focus="27,235;452,490"
+                        padding="10"></auto-img>
+            </div>
           </div>
         </div>
+        <div class="fxc-cs gap-4 w-full" id="imagewithfixedsize-original">
+          <div class="title">Original Image with focus</div>
+          <div class="relative"
+               style="position:relative">
+            <div class="absolute border-box"
+                 style="left: 27px; top:235px; width: 425px; height: 255px; border: 2px solid springgreen;">
+            </div>
+            <img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                 alt="Image not accessible"
+                 width="800"
+                 height="600" />
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -76,9 +104,23 @@
         crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+  <!-- Prism.js for code highlighting (~6KB total for JS/TS/HTML) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+        rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
   <script src="/dist/auto-img-element.define.global.js"></script>
   <style>
+    .hidden {
+      display: none;
+    }
+
     #menu span {
       cursor: default;
     }
@@ -112,6 +154,7 @@
 
     #menu {
       transition: transform 0.5s ease;
+      flex-shrink: 0;
     }
 
     .menu-closed {
@@ -149,7 +192,7 @@
       document.querySelectorAll('.controller').forEach(e => {
         e.addEventListener('click', () => {
           document.querySelector(`#${e.getAttribute('data-control')}`)?.classList.toggle('controlled-opened');
-          e.querySelector('[data-controller-icon]').classList.toggle('reversed');
+          e.querySelector('[data-controller-icon]')?.classList.toggle('reversed');
         })
       })
 

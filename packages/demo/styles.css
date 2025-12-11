@@ -171,20 +171,20 @@
 }
 
 @layer component {
-  .btn-base {
+  .btn {
     background-color: var(--color-button);
     color: var(--color-button-text);
-    @apply relative flex justify-center items-center whitespace-nowrap cursor-pointer border-none;
+    @apply relative flex justify-center items-center whitespace-nowrap cursor-pointer border-none font-bold;
   }
 
-  .btn-base.btn-md {
+  .btn.btn-md {
     @apply rounded-md;
     padding: 1.75vh 3.5vh;
-    font-size: 1.75;
+    font-size: 1.75vh;
     letter-spacing: 0.5px;
   }
 
-  .btn-base.btn-lg {
+  .btn.btn-lg {
     padding: 2vh 4vh;
     font-size: 2vh;
     letter-spacing: 0.5px;
@@ -265,6 +265,7 @@ body {
 body {
   background-color: var(--color-main);
   font-family: var(--font-content);
+  scrollbar-gutter: stable; /* Reserve space for scrollbar */
 }
 
 svg,
