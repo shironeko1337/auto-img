@@ -13,6 +13,7 @@ if (typeof globalThis !== "undefined") {
 }
 
 // Attributes for auto-img element
+// html is not case sensitive so we use hypen here
 interface AutoImgAttributes {
   src?: string;
   width?: string;
@@ -22,6 +23,7 @@ interface AutoImgAttributes {
   "allow-distortion"?: boolean | "";
   padding?: string | number;
   focus?: string;
+  "focus-center"?: string;
   "focus.tl"?: string;
   "focus.br"?: string;
   "focus.tl.x"?: string;

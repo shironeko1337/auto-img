@@ -60,7 +60,8 @@
               Here are several examples using an 800 × 600 image of a predefined focus area.
             </p>
             <p>
-              For all examples below, the image is not stretched.
+              For all examples below, the image is not stretched, but with a super narrow container,
+              there could be empty space on the border.
             </p>
 
           </div>
@@ -240,13 +241,15 @@
     }
 
     .menu {
-      transition: width 0.5s ease;
+      transition: width 0.5s ease, opacity 0.5s ease;
       flex-shrink: 0;
       overflow: hidden;
+      opacity: 1;
     }
 
     .menu.menu-closed {
       width: 0;
+      opacity: 0;
     }
   </style>
   <script>

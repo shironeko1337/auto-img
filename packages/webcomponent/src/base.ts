@@ -64,6 +64,7 @@ export const HostAttrs = [
   "width",
   "height",
   "focus",
+  "focusCenter",
   "focus.tl",
   "focus.tl.x",
   "focus.tl.y",
@@ -75,8 +76,6 @@ export const HostAttrs = [
   "defer",
   "allowDistortion",
   "padding",
-  "fetchFocus",
-  "fetchUpscale",
 ];
 
 function isDimensionValue(value: string) {
@@ -132,13 +131,24 @@ function camelToDash(str: string): string {
     .toLowerCase();
 }
 
+function getFocusCenter(input: any) {
+  let x = input["focusCenter.x"],
+    y = input["focusCenter.y"];
+
+  if (typeof input["focusCenter"] === "string") {
+    [x, y] = input.focus.split(",");
+  }
+
+  return new Point(x, y);
+}
+
 function getFocus(input: any) {
   let tlx = input["focus.tl.x"],
     tly = input["focus.tl.y"],
     brx = input["focus.br.x"],
     bry = input["focus.br.y"];
 
-  if (typeof input.focus === "string") {
+  if (typeof input["focus"] === "string") {
     const [tl, br] = input.focus.split(";");
     [tlx, tly] = tl.split(",");
     [brx, bry] = br.split(",");
@@ -230,15 +240,13 @@ export class AutoImgModel {
           height: el.naturalHeight,
         });
       });
-    } else if (this.imageSrc) {
-      const img = new Image();
-      img.onload = () => {
-        this.onImageLoaded({
-          width: img.naturalWidth,
-          height: img.naturalHeight,
-        });
-      };
-      img.src = this.imageSrc;
+    } else {
+      let imageSrc = this.imageSrc || this._getBackgroundImage(this.host);
+      if (imageSrc) {
+        this.host.style.backgroundImage = `url(${this.imageSrc})`;
+      } else {
+        // TODO missing both data-auto-img-src and background-image for the element
+      }
     }
   }
 
@@ -279,19 +287,20 @@ export class AutoImgModel {
 
     // we rely on the stable size unless width and height are exactly set to
     // a pixel value ('100px' and '100' both counts).
-    const numericWidth = parseFloat(attrs.width?.replace('px',''));
-    const numericHeight = parseFloat(attrs.height?.replace('px',''));
+    const numericWidth = parseFloat(attrs.width?.replace("px", ""));
+    const numericHeight = parseFloat(attrs.height?.replace("px", ""));
 
-    if (!Number.isNaN(numericWidth)){
+    if (!Number.isNaN(numericWidth)) {
       this.centralizerInput.viewWidth = numericWidth;
     }
-    if (!Number.isNaN(numericHeight)){
+    if (!Number.isNaN(numericHeight)) {
       this.centralizerInput.viewHeight = numericHeight;
     }
 
     this.isSizeSteady =
       !!this.centralizerInput.viewHeight && !!this.centralizerInput.viewWidth;
     this.centralizerInput.focus = getFocus(attrs);
+    this.centralizerInput.focusCenter = getFocusCenter(attrs);
     this.centralizerInput.allowDistortion = getTruthyAttrValue(
       attrs.allowDistortion
     );
@@ -340,8 +349,11 @@ export class AutoImgModel {
         input.imageWidth!,
         input.imageHeight!
       );
-      const focusRect = input.focus?.copy();
-      const image = new AutoImage(imageRect, focusRect);
+
+      // get focus area by focus center given the container rect
+      // we scale the focus area by the container ratio as much as possible
+      // with the focus rectangle staying in the image.
+      const image = new AutoImage(imageRect, this._getFocusArea(input));
       const allowDistortion = input.allowDistortion || false;
       const centralizer: TouchAndRecenterCentralizer =
         new TouchAndRecenterCentralizer(image, containerRect);
@@ -360,5 +372,49 @@ export class AutoImgModel {
       this.host.style.backgroundSize = position.backgroundSize;
       this.host.style.backgroundPosition = position.backgroundPosition;
     }
+  }
+
+  _getFocusArea(input: Partial<AutoImgInput>) {
+    if (input.focusCenter && !input.focus) {
+      const ratio = input.viewWidth! / input.viewHeight!;
+      const imageWidth = input.imageWidth!,
+        imageHeight = input.imageHeight!,
+        x = input.focusCenter.x,
+        y = input.focusCenter.y;
+      const xDistance = Math.min(x, imageWidth - x),
+        yDistance = Math.min(y, imageHeight - y);
+
+      /* Expand scale of four edges, conditions of focus staying in the image */
+      const sortedScales: any = [
+        [y, y * ratio <= xDistance],
+        [(imageWidth - x) / ratio, imageWidth - x <= yDistance],
+        [imageHeight - y, (imageHeight - y) * ratio <= xDistance],
+        [x, x / ratio <= yDistance],
+      ]
+        .filter(([scale, condition]) => condition)
+        .map(([scale, condition]) => scale)
+        .sort((a, b) => (a < b ? 1 : -1));
+
+      if (sortedScales.length) {
+        const scale = sortedScales[0];
+
+        return new Rect(
+          new Point(x - scale * ratio, y - scale),
+          new Point(x + scale * ratio, y + scale)
+        );
+      }
+    } else {
+      return input.focus?.copy();
+    }
+  }
+
+  /**
+   * Returns the background image url address from the background image
+   * property.
+   */
+  _getBackgroundImage(e: HTMLElement): string | null {
+    const bg = getComputedStyle(e).backgroundImage;
+    const urls = [...bg.matchAll(/url\((['"]?)(.*?)\1\)/g)].map((m) => m[2]);
+    return urls.length === 1 ? urls[0] : null;
   }
 }

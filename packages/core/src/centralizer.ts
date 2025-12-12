@@ -1,4 +1,4 @@
-import { Image, ImagePosition, Rect } from "./base";
+import { Image, ImagePosition, Rect, Point } from "./base";
 
 /**
  * All inputs required for render an auto-processed image.
@@ -8,7 +8,8 @@ export type AutoImgInput = {
   viewHeight: number;
   imageWidth: number;
   imageHeight: number;
-  focus: Rect;
+  focus?: Rect;
+  focusCenter?: Point;
   allowDistortion?: boolean;
   config: TouchAndRecenterCentralizerConfig;
 };
