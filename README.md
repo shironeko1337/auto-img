@@ -67,7 +67,7 @@ Properties that doesn't exist:
 - [ ] Add tests for web component functionalities.
   - [ ] Unit tests for base model.
 - [ ] Create a demo page for use scenario showcase of `auto-img`.
-  - [ ] Move the following examples to a demo file and attach links.
+  - [x] Move the following examples to a demo file and attach links.
   - [ ] Complete the README docs.
 - [ ] Publish web component npm bundle and setup pipeline.
 - [ ] Vue adapter.
