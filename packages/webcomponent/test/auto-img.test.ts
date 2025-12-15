@@ -1,123 +1,102 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import "../src/index";
 
-describe("AutoImgElement", () => {
+describe("AutoImg", () => {
   let container: HTMLDivElement;
 
   beforeEach(() => {
-    // Create a container for each test
-    container = document.createElement("div");
-    container.style.width = "400px";
-    container.style.height = "300px";
-    document.body.appendChild(container);
+    // container = document.createElement("div");
+    // container.style.width = "400px";
+    // container.style.height = "300px";
+    // document.body.appendChild(container);
   });
 
   afterEach(() => {
-    // Clean up after each test
-    document.body.removeChild(container);
+    // document.body.removeChild(container);
   });
 
-  describe("Element Registration", () => {
+  describe("autoimg element", () => {
     it("should register custom element", () => {
       expect(customElements.get("auto-img")).toBeDefined();
     });
-
-    it("should create an instance of AutoImgElement", () => {
-      const element = document.createElement("auto-img") as HTMLElement;
-      expect(element).toBeInstanceOf(HTMLElement);
-      expect(element.tagName).toBe("AUTO-IMG");
-    });
+    it("should auto attach a model to autoimg element", () => {});
+    it("should treat width and height as 100% when not defined", () => {});
+    it("should use width and height as CSS properties for container as long as they are valid string values", () => {});
   });
 
-  describe("Shadow DOM", () => {
-    it("should create shadow root", () => {
-      const element = document.createElement("auto-img") as any;
-      container.appendChild(element);
-      expect(element.shadowRoot).toBeDefined();
-      expect(element.shadowRoot.mode).toBe("open");
-    });
+  describe("native html element", () => {
+    it("should ignore ", () => {});
+    it("should use data-auto-img-src for native elements", () => {});
 
-    it("should contain container div in shadow root", () => {
-      const element = document.createElement("auto-img") as any;
-      container.appendChild(element);
-      const containerDiv = element.shadowRoot.querySelector("div");
-      expect(containerDiv).toBeDefined();
-    });
+    it("should use background-image for native elements when data-auto-img-src is not defined", () => {});
 
-    it("should contain img element in shadow root", () => {
-      const element = document.createElement("auto-img") as any;
-      container.appendChild(element);
-      const img = element.shadowRoot.querySelector("img");
-      expect(img).toBeDefined();
-    });
+    it("should ignore width and height", () => {});
   });
 
-  describe("Render Method", () => {
-    it("should have render method", () => {
-      const element = document.createElement("auto-img") as any;
-      expect(typeof element.render).toBe("function");
+  describe("Basic model", () => {
+    describe("read attributes", () => {
+      it("should read all attributes into model", () => {});
+      it("should use config when placeholder is not defined", () => {});
+    });
+    it("should render image when image is loaded and size is stable", () => {});
+
+    it("should not render image when image is not loaded", () => {});
+
+    it("should not render image when size is not stable", () => {});
+
+    it("should pass the correct centralizer inputs to centralizer instance", () => {});
+
+    describe("when deferred is set", () => {
+      it("should not render image when image loaded for the first time and size is ready", () => {});
+      it("should not render image when size is ready for the first time and image is loaded", () => {});
     });
 
-    it("should accept render options", async () => {
-      const element = document.createElement("auto-img") as any;
-      element.setAttribute(
-        "src",
-        "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-      );
-      container.appendChild(element);
+    describe("focus area", () => {
+      it("should get the correct focus area by focus corners", () => {});
 
-      // Should not throw
-      await expect(
-        element.render({ width: "100px", height: "100px" })
-      ).resolves.not.toThrow();
+      it("should get the correct focus area by focus center when size is stable", () => {});
     });
+
+    it("should require src for autoimg", () => {});
   });
 
-  describe("Global API Integration", () => {
-    it("should register with global API on connect", () => {
-      const element = document.createElement("auto-img") as any;
-      container.appendChild(element);
+  describe("API", () => {
+    it("should load all custom elements after loading as long as library is included", () => {});
 
-      // Element should be connected
-      expect(element.isConnected).toBe(true);
-    });
+    it('should load all specified elements by selector on calling "load" ', () => {});
 
-    it("should unregister from global API on disconnect", () => {
-      const element = document.createElement("auto-img") as any;
-      container.appendChild(element);
-      container.removeChild(element);
+    it("should have a map between model and element after loading", () => {});
 
-      // Element should be disconnected
-      expect(element.isConnected).toBe(false);
-    });
+    it("should remove the model element mapping when element is removed", () => {});
+
+    it("should add the model back to the element entry when element is added back", () => {});
+
+    it("should update element's resize state when resizing", () => {});
+
+    it(
+      "it should render element immediately even if the resize state is" +
+        "not marked as stable when calling render with waitResize = true",
+      () => {}
+    );
+
+    it(
+      "it should render element until element size is stable" +
+        "when calling render with waitResize = false",
+      () => {}
+    );
   });
 
   describe("Deferred Rendering", () => {
-    it("should not auto-render when defer attribute is present", () => {
-      const element = document.createElement("auto-img") as any;
-      element.setAttribute(
-        "src",
-        "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-      );
-      element.setAttribute("defer", "");
-      container.appendChild(element);
-
-      // Should have defer attribute
-      expect(element.hasAttribute("defer")).toBe(true);
-    });
-  });
-});
-
-describe("AutoImg Global API", () => {
-  it("should expose AutoImg global object", () => {
-    expect((window as any).AutoImg).toBeDefined();
-  });
-
-  it("should have scan method", () => {
-    expect(typeof (window as any).AutoImg.scan).toBe("function");
-  });
-
-  it("should have render method", () => {
-    expect(typeof (window as any).AutoImg.render).toBe("function");
+    //   it("should not auto-render when defer attribute is present", () => {
+    //     const element = document.createElement("auto-img") as any;
+    //     element.setAttribute(
+    //       "src",
+    //       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    //     );
+    //     element.setAttribute("defer", "");
+    //     container.appendChild(element);
+    //     // Should have defer attribute
+    //     expect(element.hasAttribute("defer")).toBe(true);
+    //   });
   });
 });

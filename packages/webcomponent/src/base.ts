@@ -58,11 +58,9 @@ export class MutableState<T> {
 }
 
 /**
- * Those attributes can be read synchronously from the host element.
+ * Host attributes that are comon to native elements and auto-img elements.
  */
-export const HostAttrs = [
-  "width",
-  "height",
+export const CommonHostAttrs = [
   "focus",
   "focusCenter",
   "focus.tl",
@@ -118,6 +116,10 @@ export function getDimensionValue(attrValue: string | number | null): string {
   return isDimensionValue(attrValue) ? attrValue : "";
 }
 
+/**
+ * HTML attruibutes defined might have "false" as value and it should be equivalent to undefined or null,
+ * otherwise. it's true, including empty string,.
+ */
 function getTruthyAttrValue(attrValue: string | null | undefined): boolean {
   return attrValue === undefined || attrValue === null || attrValue === "false"
     ? false
@@ -276,7 +278,7 @@ export class AutoImgModel {
     const host = this.host;
     const isHTMLElement = host.tagName !== "AUTO-IMG";
 
-    HostAttrs.forEach((attrCamelCaseName) => {
+    CommonHostAttrs.forEach((attrCamelCaseName) => {
       const attr = camelToDash(attrCamelCaseName);
       const attrName = isHTMLElement ? `data-auto-img-${attr}` : attr;
       if (host.hasAttribute(attrName)) {
@@ -284,18 +286,6 @@ export class AutoImgModel {
         attrs[attrCamelCaseName] = attrValue;
       }
     });
-
-    // we rely on the stable size unless width and height are exactly set to
-    // a pixel value ('100px' and '100' both counts).
-    const numericWidth = parseFloat(attrs.width?.replace("px", ""));
-    const numericHeight = parseFloat(attrs.height?.replace("px", ""));
-
-    if (!Number.isNaN(numericWidth)) {
-      this.centralizerInput.viewWidth = numericWidth;
-    }
-    if (!Number.isNaN(numericHeight)) {
-      this.centralizerInput.viewHeight = numericHeight;
-    }
 
     this.isSizeSteady =
       !!this.centralizerInput.viewHeight && !!this.centralizerInput.viewWidth;

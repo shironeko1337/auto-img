@@ -5,7 +5,7 @@ import { ImagePosition } from "autoimg-core";
 import {
   AutoImgModel,
   getDimensionValue,
-  HostAttrs,
+  CommonHostAttrs,
   PixelSize,
 } from "./base";
 
@@ -21,15 +21,14 @@ export class AutoImgElement extends HTMLElement {
   static get observedAttributes() {
     // `src` can be directly defined on <auto-img>, but for
     // general components, it's read from different properties.
-    return ["src"].concat(HostAttrs);
+    return ["src", "width", "height"].concat(CommonHostAttrs);
   }
 
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
 
-    this.style.width =
-      getDimensionValue(this.getAttribute("width")) || "100%";
+    this.style.width = getDimensionValue(this.getAttribute("width")) || "100%";
     this.style.height =
       getDimensionValue(this.getAttribute("height")) || "100%";
     this.style.position = "relative";
