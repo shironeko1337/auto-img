@@ -69,7 +69,6 @@ export const CommonHostAttrs = [
   "focus.br",
   "focus.br.x",
   "focus.br.y",
-  "placeholder",
 
   "defer",
   "allowDistortion",
@@ -109,11 +108,20 @@ function isDimensionValue(value: string) {
  */
 export function getDimensionValue(attrValue: string | number | null): string {
   attrValue = `${attrValue}`;
-  const numVal = parseFloat(attrValue);
-  if (!Number.isNaN(numVal)) {
+  const trimmed = attrValue.trim();
+
+  // Check if it's just a number without units
+  const numVal = parseFloat(trimmed);
+  if (!Number.isNaN(numVal) && trimmed === numVal.toString()) {
     return numVal + "px";
   }
-  return isDimensionValue(attrValue) ? attrValue : "";
+
+  // Otherwise, check if it's a valid dimension with units
+  if (isDimensionValue(trimmed)) {
+    return trimmed;
+  }
+
+  return "";
 }
 
 /**
@@ -133,15 +141,22 @@ function camelToDash(str: string): string {
     .toLowerCase();
 }
 
+/**
+ * -5.1% to 5.1%
+ */
+export function getReversePctNumber(value: string) {
+  return `${-Number(value.replace(/[^\d\-\.]/g, ""))}%`;
+}
+
 function getFocusCenter(input: any) {
   let x = input["focusCenter.x"],
     y = input["focusCenter.y"];
 
   if (typeof input["focusCenter"] === "string") {
-    [x, y] = input.focus.split(",");
+    [x, y] = input.focusCenter.split(",");
   }
 
-  return new Point(x, y);
+  return new Point(parseFloat(x), parseFloat(y));
 }
 
 function getFocus(input: any) {
@@ -161,8 +176,25 @@ function getFocus(input: any) {
     [tlx, tly] = input["focus.tl"].split(",");
     [brx, bry] = input["focus.br"].split(",");
   }
+
+  // If no focus attributes were provided, return undefined
+  if (tlx === undefined && tly === undefined && brx === undefined && bry === undefined) {
+    return undefined;
+  }
+
   [tlx, tly, brx, bry] = [tlx, tly, brx, bry].map(parseFloat);
   return new Rect(new Point(tlx, tly), new Point(brx, bry));
+}
+
+/**
+ * If model has valid attributes after readAttr. It's different from inputValidation
+ * as it's not for the centralizer algorithm.
+ */
+function attrValidation(model: AutoImgModel) {
+  if (model.isAutoImg()) {
+  } else {
+  }
+  return true;
 }
 
 /**
@@ -196,7 +228,7 @@ export class AutoImgModel {
     state.setOnResizeStable(this.onSizeSteady.bind(this));
     this.resizeState = state;
 
-    if (this.host.tagName === "AUTO-IMG") {
+    if (this.isAutoImg()) {
       (this.host as AutoImgElement).model = this;
     }
   }
@@ -272,15 +304,15 @@ export class AutoImgModel {
 
   /**
    * Read attributes from host, and assign them to proper fields of the model.
+   * Return if attrs are valid.
    */
   readAttrs() {
     const attrs: any = {};
     const host = this.host;
-    const isHTMLElement = host.tagName !== "AUTO-IMG";
 
     CommonHostAttrs.forEach((attrCamelCaseName) => {
       const attr = camelToDash(attrCamelCaseName);
-      const attrName = isHTMLElement ? `data-auto-img-${attr}` : attr;
+      const attrName = this.isAutoImg() ? attr : `data-auto-img-${attr}`;
       if (host.hasAttribute(attrName)) {
         const attrValue = host.getAttribute(attrName);
         attrs[attrCamelCaseName] = attrValue;
@@ -299,25 +331,26 @@ export class AutoImgModel {
     };
 
     let src = "";
-    const tag = host.tagName;
-    if (tag === "AUTO-IMG") {
+    if (this.isAutoImg()) {
       src = host.getAttribute("src") || "";
     } else {
-      /**
-       * Try to get the background-image property,
-       * mention here not all elements with a valid background-image can be
-       * adjusted by background-position and background-size.
-       */
-      const style = getComputedStyle(host);
-      const bg = style.backgroundImage;
-      const match = /url\(["']?(.*?)["']?\)/.exec(bg);
-      if (match) {
-        src = match[1];
+      // For native elements, first try data-auto-img-src attribute
+      src = host.getAttribute("data-auto-img-src") || "";
+
+      // If not specified, try to get the background-image property
+      if (!src) {
+        const style = getComputedStyle(host);
+        const bg = style.backgroundImage;
+        const match = /url\(["']?(.*?)["']?\)/.exec(bg);
+        if (match) {
+          src = match[1];
+        }
       }
     }
     this.imageSrc = src;
     this.placeholder = attrs.placeholder || this.config.placeholder;
     this.defer = getTruthyAttrValue(attrs.defer);
+    return attrValidation(this);
   }
 
   /**
@@ -355,8 +388,7 @@ export class AutoImgModel {
   }
 
   setPosition(position: ImagePosition) {
-    const tag = this.host.tagName;
-    if (tag === "AUTO-IMG") {
+    if (this.isAutoImg()) {
       (this.host as AutoImgElement).setPosition(position);
     } else {
       this.host.style.backgroundSize = position.backgroundSize;
@@ -364,6 +396,14 @@ export class AutoImgModel {
     }
   }
 
+  isAutoImg() {
+    return this.host.tagName === "AUTO-IMG";
+  }
+
+  /**
+   * Get focus area by focus rectangle or using an algorithm to calculate focus
+   * rectangle when only focus center is defined.
+   */
   _getFocusArea(input: Partial<AutoImgInput>) {
     if (input.focusCenter && !input.focus) {
       const ratio = input.viewWidth! / input.viewHeight!;

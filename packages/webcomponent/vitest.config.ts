@@ -5,8 +5,8 @@ export default defineConfig({
     // Enable globals like describe, it, expect
     globals: true,
 
-    // Use browser environment for web component testing
-    environment: 'jsdom',
+    // Use happy-dom environment for better web component support
+    environment: 'happy-dom',
 
     // Test file patterns
     include: ['test/**/*.test.ts', 'test/**/*.spec.ts'],

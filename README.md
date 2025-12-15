@@ -64,21 +64,23 @@ Properties that doesn't exist:
 - [x] Add tests for core functionalities
 - [x] Create a demo page for visualizing the transformation and configurations.
 - [x] Design the core APIs and implement the web component adapter.
-- [ ] Add tests for web component functionalities.
-  - [ ] Unit tests for base model.
+- [x] Add tests for web component functionalities.
+  - [x] Unit tests for base model.
 - [ ] Create a demo page for use scenario showcase of `auto-img`.
   - [x] Move the following examples to a demo file and attach links.
-  - [ ] Complete the README docs.
-- [ ] Publish web component npm bundle and setup pipeline.
+  - [ ] Implement a demo for <auto-img/> with placeholders
+  - [ ] Implement a demo for defer loading of <auto-img/> and native element
+- [ ] Upload web component to npm.
 - [ ] Vue adapter.
 - [ ] Tests for Vue adapter.
-- [ ] Create a simple Vue demo page with the same demos as web component.
-- [ ] Publish Vue npm bundle and setup pipeline.
+- [ ] In demo page, add a demo for vue component.
+- [ ] Upload Vue component to npm.
 - [ ] React adapter.
 - [ ] Tests for React adapter.
-- [ ] Create a simple React demo page with the same demos as web component.
-- [ ] Publish React npm bundle and setup pipeline.
-- [ ] Promoting the library?
+- [ ] In demo page, add a demo for react component.
+- [ ] Upload React component to npm.
+- [ ] Setup CICD pipeline.
+- [ ] Finalize README docs.
 - [ ] Further optimizations, more friendly API? get faster? Different version of images based on container size? Using a self hosting website and AI to auto find focus or auto upscaling?...
 
 # Hot patches
@@ -87,9 +89,11 @@ Properties that doesn't exist:
 - [ ] Fix visualize animation.
 - [x] Allow another format of focus to be defined  `focus="200,300"`, it's the coordinates of the focus center, and in that case, the focus area is the largest rectangle with the same w/h ratio of the image.
 - [x] Adjust the design to have codesandbox demo only for the easiest use case, for all other cases, use a full page
-- [ ] See if there are MDX plugin available to show highlighted code.
+- [ ] Implement attrValidation and add 2 unit tests
+- [ ] Examine unit tests
 - [ ] Not sure what's the best practice for wrapping a library, now both API singleton and Element type are wrapped in a namespace, how do we want to wrap the react and vue libraries?
-- [ ] Find a way to move README files into the demo page with MDX format so that we once the playground is moved to demo page, we can call demo page done, all the things left is to finanlize the README files.
+- [ ] Move centralizer playground to demo.
+- [ ] Find a way to render static README files in the demo.
 
 ```html
 <auto-img src="..." width="200" height="200" />

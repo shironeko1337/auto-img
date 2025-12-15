@@ -74,10 +74,14 @@ export class AutoImgAPI {
     }
   }
 
+  /**
+   * Load a single html element to attach a model to it.
+   */
   load(element: HTMLElement) {
     const model = this.attachModel(element);
-    model.readAttrs();
-    model.loadAndRender();
+    if (model.readAttrs()) {
+      model.loadAndRender();
+    }
   }
 
   /**
@@ -94,27 +98,29 @@ export class AutoImgAPI {
    */
   async render(element: HTMLElement, waitResize = false) {
     let model: AutoImgModel;
+
     if (!this.elementModelMap.has(element)) {
       model = this.attachModel(element);
     } else {
       model = this.elementModelMap.get(element)!;
     }
 
-    model.readAttrs();
-    model.defer = false;
-
-    if (waitResize) {
-      await model.loadAndRender();
-    } else {
-      // temporarily set to true just to prevent render automatically
-      // because we want to set isSizeSteady to true exactly before render.
-      // this value is not set back to `false` or original value because
-      // there is no way we can track if it's set during rendering or not (we don't have to).
-      model.defer = true;
-      await model.loadAndRender();
-      model.isSizeSteady = true;
-      await model.render();
+    if (model.readAttrs()) {
       model.defer = false;
+
+      if (waitResize) {
+        await model.loadAndRender();
+      } else {
+        // temporarily set to true just to prevent render automatically
+        // because we want to set isSizeSteady to true exactly before render.
+        // this value is not set back to `false` or original value because
+        // there is no way we can track if it's set during rendering or not (we don't have to).
+        model.defer = true;
+        await model.loadAndRender();
+        model.isSizeSteady = true;
+        await model.render();
+        model.defer = false;
+      }
     }
   }
 

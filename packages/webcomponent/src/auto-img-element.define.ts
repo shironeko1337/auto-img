@@ -1,6 +1,9 @@
-import { AutoImgElement } from "./auto-img-element";
+import { AutoImgElement, setAutoImgAPI } from "./auto-img-element";
 // Here we don't need the class for a singleton.
 import { autoImgAPI as AutoImgAPI } from "./auto-img-api";
+
+// Set the global API reference so elements can auto-attach models
+setAutoImgAPI(AutoImgAPI);
 
 // Auto-register the custom element
 if (!customElements.get("auto-img")) {
