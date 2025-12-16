@@ -80,6 +80,8 @@ Properties that doesn't exist:
 - [ ] Upload Vue component to npm.
 - [ ] React adapter.
 - [ ] Tests for React adapter.
+  - [ ] Passes prop correctly to webcomponent.
+  - [ ] Users can call web component functions by using a ref.
 - [ ] In demo page, add a demo for react component.
 - [ ] Upload React component to npm.
 - [ ] Setup CICD pipeline.
@@ -95,6 +97,7 @@ Properties that doesn't exist:
 - [ ] Not sure what's the best practice for wrapping a library, now both API singleton and Element type are wrapped in a namespace, how do we want to wrap the react and vue libraries?
 - [ ] Move centralizer playground to demo.
 - [ ] Find a way to render static README files in the demo.
+- [ ] Propagate properties to img in auto-img element to preserve the native functions such as only load when visible.
 
 ```html
 <auto-img src="..." width="200" height="200" />
