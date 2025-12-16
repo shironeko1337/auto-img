@@ -5,7 +5,6 @@ export interface AutoImgConfig {
   resizeRerender?: boolean;
   placeholder?: string | Record<string, string>;
   resizeThrottle?: number;
-  loadPlaceholderTimeout?: number;
   loadImageTimeout?: number;
   defer?: boolean;
 }
@@ -17,8 +16,10 @@ export class AutoImgAPI {
   config: AutoImgConfig = {
     resizeRerender: true,
     resizeThrottle: 300,
-    loadPlaceholderTimeout: 100,
-    loadImageTimeout: 300,
+    // Timeout in milliseconds of loading image, since we can set a placeholder
+    // when loading, this timeout can be set to a large value as default,
+    // as it won't cause things to be blocking.
+    loadImageTimeout: 10000,
   };
 
   private elementModelMap: Map<HTMLElement, AutoImgModel> = new Map();

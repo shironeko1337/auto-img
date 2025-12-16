@@ -14,7 +14,7 @@ import type { AutoImgAPI } from "./auto-img-api";
 /**
  * Attributes exclusive to auto-img elements.
  */
-const AutoImgElementAttrs = ["src", "width", "height", "placeholder"];
+const AutoImgElementAttrs = ["src", "width", "height"];
 
 // Global API reference set by auto-img-element.define.ts
 let _autoImgAPI: AutoImgAPI | null = null;
@@ -25,7 +25,10 @@ export function setAutoImgAPI(api: AutoImgAPI) {
 
 export class AutoImgElement extends HTMLElement {
   model?: AutoImgModel;
+  // The image for presenting.
   private img: HTMLImageElement;
+  // The image that is loading or not ready to be presented.
+  private loadingImg?: HTMLImageElement;
   declare shadowRoot: ShadowRoot;
 
   static get observedAttributes() {
@@ -42,11 +45,9 @@ export class AutoImgElement extends HTMLElement {
     this.style.position = "relative";
     this.style.overflow = "hidden";
     this.style.display = "block";
-
     this.img = document.createElement("img");
     this.img.style.position = "absolute";
     this.img.style.display = "block";
-
     this.shadowRoot.appendChild(this.img);
   }
 
@@ -60,7 +61,11 @@ export class AutoImgElement extends HTMLElement {
     }
   }
 
-  attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
+  attributeChangedCallback(
+    name: string,
+    oldValue: string | null,
+    newValue: string | null
+  ) {
     // Update styles when width or height attributes change
     if (name === "width" && newValue !== oldValue) {
       this.style.width = getDimensionValue(newValue) || "100%";
@@ -69,7 +74,7 @@ export class AutoImgElement extends HTMLElement {
     }
 
     // If model exists, read attrs and potentially re-render
-    if (this.model && CommonHostAttrs.includes(name)) {
+    if (this.model && AutoImgElementAttrs.includes(name)) {
       if (this.model.readAttrs()) {
         this.model.loadAndRender();
       }
@@ -78,27 +83,54 @@ export class AutoImgElement extends HTMLElement {
 
   disconnectedCallback() {}
 
+  /**
+   * If image is loaded, if there are image loading, it's the loading state of that
+   * image, otherwise it's loaded as long as img src equals to given src.
+   */
   isImageLoaded(src?: string) {
-    return src === this.img.getAttribute("src") && this.img.complete;
+    return this.loadingImg
+      ? this.loadingImg &&
+          src === this.loadingImg.getAttribute("src") &&
+          this.loadingImg.complete
+      : this.img && this.img.src === src;
+  }
+
+  /**
+   * Show loaded image and set loading image to empty.
+   */
+  showLoadedImage() {
+    if (this.loadingImg) {
+      this.shadowRoot.removeChild(this.img);
+      this.img = this.loadingImg;
+      this.img.style.display = "block";
+      this.loadingImg = undefined;
+    }
   }
 
   /**
    * Load image by src.
    */
   async loadImage(src: string, timeout: any): Promise<PixelSize> {
-    if (this.isImageLoaded(src)) {// image with that src is already loaded.
+    if (this.isImageLoaded(src)) {
+      const loadedImg = this.loadingImg || this.img;
       return Promise.resolve({
-        width: this.img.naturalWidth,
-        height: this.img.naturalHeight,
+        width: loadedImg.naturalWidth,
+        height: loadedImg.naturalHeight,
       });
     } else {
-      this.img.src = src;
+      // Create a hidden image for loading, and present once loaded.
+      this.loadingImg = document.createElement("img");
+      this.loadingImg.style.position = "absolute";
+      this.loadingImg.style.display = "none";
+      this.shadowRoot.appendChild(this.loadingImg);
+
+      this.loadingImg.src = src;
       return await Promise.race<PixelSize>([
         new Promise((resolve) => {
-          this.img.addEventListener("load", () => {
+          this.loadingImg!.addEventListener("load", () => {
             resolve({
-              width: this.img.naturalWidth,
-              height: this.img.naturalHeight,
+              width: this.loadingImg!.naturalWidth,
+              height: this.loadingImg!.naturalHeight,
             });
           });
         }),
@@ -123,5 +155,11 @@ export class AutoImgElement extends HTMLElement {
     this.img.style.transform = `translate(
     ${getReversePctNumber(left)},
     ${getReversePctNumber(top)})`;
+  }
+
+  setPositionForPlaceholder() {
+    this.img.style.width = "100%";
+    this.img.style.height = "100%";
+    this.img.style.objectFit = "none";
   }
 }

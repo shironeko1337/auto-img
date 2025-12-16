@@ -10,9 +10,10 @@ if (!customElements.get("auto-img")) {
   customElements.define("auto-img", AutoImgElement);
 }
 
-// Load models for all <auto-img/> elements.
-if (typeof globalThis !== "undefined") {
-  AutoImgAPI.loadAll("auto-img");
+// Expose to window object for global access
+if (typeof window !== "undefined") {
+  (window as any).AutoImgAPI = AutoImgAPI;
+  (window as any).AutoImgElement = AutoImgElement;
 }
 
 // Attributes for auto-img element

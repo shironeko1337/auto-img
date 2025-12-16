@@ -73,6 +73,9 @@ export const CommonHostAttrs = [
   "defer",
   "allowDistortion",
   "padding",
+  // placeholder should belong to model, however, since rendering can't be controlled
+  // for native element, it's only effective for auto-img elements.
+  "placeholder",
 ];
 
 function isDimensionValue(value: string) {
@@ -178,7 +181,12 @@ function getFocus(input: any) {
   }
 
   // If no focus attributes were provided, return undefined
-  if (tlx === undefined && tly === undefined && brx === undefined && bry === undefined) {
+  if (
+    tlx === undefined &&
+    tly === undefined &&
+    brx === undefined &&
+    bry === undefined
+  ) {
     return undefined;
   }
 
@@ -214,8 +222,10 @@ export class AutoImgModel {
   // after the initial render, the element would be marked as size steady
   // if the size doesn't change within a certain period of time.
   isSizeSteady = false;
-  // Whether we defer render the image, only makes sense before the first render,
+  // Whether we defer rendering the image, only makes sense before the first render,
   // once we render it manually, it's set to true.
+  // Notice for auto-img we defer rendering, for native elements, the actual
+  // rendering isn't controlled by AutoImg model, so we only defer centralizing.
   defer = false;
   resizeState?: MutableState<PixelSize>;
 
@@ -230,75 +240,6 @@ export class AutoImgModel {
 
     if (this.isAutoImg()) {
       (this.host as AutoImgElement).model = this;
-    }
-  }
-
-  /**
-   * Read attributes and possibly render later (if it's not "deferred").
-   *
-   * 1. Read attrs from elements.
-   * 2. Start loading image.
-   *    When placeholder is present, load placeholder then load image.
-   * 3. Define on load complete callbacks.
-   */
-  async loadAndRender() {
-    const tag = this.host.tagName;
-    if (tag === "AUTO-IMG") {
-      const el = this.host as AutoImgElement;
-      if (this.placeholder && !el.isImageLoaded(this.imageSrc)) {
-        await el.loadImage(
-          this.placeholder,
-          this.config.loadPlaceholderTimeout
-        );
-        if (this.imageSrc) {
-          const imageSize: PixelSize = await el.loadImage(
-            this.imageSrc,
-            this.config.loadImageTimeout
-          );
-          this.onImageLoaded(imageSize);
-        }
-      } else {
-        if (this.imageSrc) {
-          const imageSize: PixelSize = await el.loadImage(
-            this.imageSrc,
-            this.config.loadImageTimeout
-          );
-          this.onImageLoaded(imageSize);
-        }
-      }
-    } else if (tag === "IMG") {
-      const el = this.host as HTMLImageElement;
-      this.host.addEventListener("load", () => {
-        this.onImageLoaded({
-          width: el.naturalWidth,
-          height: el.naturalHeight,
-        });
-      });
-    } else {
-      let imageSrc = this.imageSrc || this._getBackgroundImage(this.host);
-      if (imageSrc) {
-        this.host.style.backgroundImage = `url(${this.imageSrc})`;
-      } else {
-        // TODO missing both data-auto-img-src and background-image for the element
-      }
-    }
-  }
-
-  onImageLoaded(imageSize: PixelSize) {
-    this.centralizerInput.imageWidth = imageSize.width;
-    this.centralizerInput.imageHeight = imageSize.height;
-    this.isImageLoaded = true;
-    if (!this.defer && !this.config.defer) {
-      this.render();
-    }
-  }
-
-  onSizeSteady(containerSize: PixelSize) {
-    this.isSizeSteady = true;
-    this.centralizerInput.viewHeight = containerSize.height;
-    this.centralizerInput.viewWidth = containerSize.width;
-    if (!this.defer && !this.config.defer) {
-      this.render();
     }
   }
 
@@ -354,6 +295,79 @@ export class AutoImgModel {
   }
 
   /**
+   * Read attributes and possibly render later (if it's not "deferred").
+   *
+   * 1. Read attrs from elements.
+   * 2. Start loading image.
+   *    When placeholder is present, load placeholder then load image.
+   * 3. Define on load complete callbacks.
+   */
+  async loadAndRender() {
+    const tag = this.host.tagName;
+    if (tag === "AUTO-IMG") {
+      const el = this.host as AutoImgElement;
+      if (this.placeholder && !el.isImageLoaded(this.imageSrc)) {
+        await el.loadImage(
+          this.placeholder,
+          this.config.loadImageTimeout
+        );
+        el.showLoadedImage();
+        el.setPositionForPlaceholder();
+        if (this.imageSrc) {
+          const imageSize: PixelSize = await el.loadImage(
+            this.imageSrc,
+            this.config.loadImageTimeout
+          );
+          if (imageSize.width > 0 && imageSize.height > 0) {
+            this.onImageLoaded(imageSize);
+          }
+        }
+      } else {
+        if (this.imageSrc) {
+          const imageSize: PixelSize = await el.loadImage(
+            this.imageSrc,
+            this.config.loadImageTimeout
+          );
+          this.onImageLoaded(imageSize);
+        }
+      }
+    } else if (tag === "IMG") {
+      const el = this.host as HTMLImageElement;
+      this.host.addEventListener("load", () => {
+        this.onImageLoaded({
+          width: el.naturalWidth,
+          height: el.naturalHeight,
+        });
+      });
+    } else {
+      let imageSrc = this.imageSrc || this._getBackgroundImage(this.host);
+      if (imageSrc) {
+        this.host.style.backgroundImage = `url(${this.imageSrc})`;
+      } else {
+        // TODO missing both data-auto-img-src and background-image for the element
+      }
+    }
+  }
+
+  onImageLoaded(imageSize: PixelSize) {
+    this.centralizerInput.imageWidth = imageSize.width;
+    this.centralizerInput.imageHeight = imageSize.height;
+    this.isImageLoaded = true;
+    if (!this.defer && !this.config.defer) {
+      this.render();
+    }
+  }
+
+  onSizeSteady(containerSize: PixelSize) {
+    this.isSizeSteady = true;
+    this.centralizerInput.viewHeight = containerSize.height;
+    this.centralizerInput.viewWidth = containerSize.width;
+    if (!this.defer && !this.config.defer) {
+      this.render();
+    }
+  }
+
+  /**
    * Render the image when image is loaded and size is steady.
    */
   async render() {
@@ -381,15 +395,21 @@ export class AutoImgModel {
       const centralizer: TouchAndRecenterCentralizer =
         new TouchAndRecenterCentralizer(image, containerRect);
       await centralizer.transform(allowDistortion, { ...input.config });
-      this.setPosition(centralizer.getPosition());
+      this.showCentralizedImage(centralizer.getPosition());
     } else {
       // TODO error handling
     }
   }
 
-  setPosition(position: ImagePosition) {
+  /**
+   * For auto-img, set positions and show the loaded image.
+   * For native element, set positions.
+   */
+  showCentralizedImage(position: ImagePosition) {
     if (this.isAutoImg()) {
-      (this.host as AutoImgElement).setPosition(position);
+      const autoImgEl = this.host as AutoImgElement;
+      autoImgEl.showLoadedImage();
+      autoImgEl.setPosition(position);
     } else {
       this.host.style.backgroundSize = position.backgroundSize;
       this.host.style.backgroundPosition = position.backgroundPosition;

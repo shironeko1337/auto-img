@@ -66,10 +66,13 @@ Properties that doesn't exist:
 - [x] Design the core APIs and implement the web component adapter.
 - [x] Add tests for web component functionalities.
   - [x] Unit tests for base model.
-- [ ] Create a demo page for use scenario showcase of `auto-img`.
+- [x] Create a demo page for use scenario showcase of `auto-img`.
   - [x] Move the following examples to a demo file and attach links.
-  - [ ] Implement a demo for <auto-img/> with placeholders
-  - [ ] Implement a demo for defer loading of <auto-img/> and native element
+  - [x] Implement a demo for <auto-img/> with placeholders
+  - [x] Implement a demo for defer rendering of <auto-img/> (for native elements we can only defer centralizing which is too trivial to demo)
+- [ ] Examine unit tests
+  - [ ] Implement attrValidation and add unit test
+  - [ ] Add unit tests for placeholder and defer rendering for auto-img element
 - [ ] Upload web component to npm.
 - [ ] Vue adapter.
 - [ ] Tests for Vue adapter.
@@ -89,8 +92,6 @@ Properties that doesn't exist:
 - [ ] Fix visualize animation.
 - [x] Allow another format of focus to be defined  `focus="200,300"`, it's the coordinates of the focus center, and in that case, the focus area is the largest rectangle with the same w/h ratio of the image.
 - [x] Adjust the design to have codesandbox demo only for the easiest use case, for all other cases, use a full page
-- [ ] Implement attrValidation and add 2 unit tests
-- [ ] Examine unit tests
 - [ ] Not sure what's the best practice for wrapping a library, now both API singleton and Element type are wrapped in a namespace, how do we want to wrap the react and vue libraries?
 - [ ] Move centralizer playground to demo.
 - [ ] Find a way to render static README files in the demo.
