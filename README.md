@@ -60,7 +60,7 @@ Properties that doesn't exist:
 
 
 # Todos
-- [x] Implement core functionalities.
+- [x] Implement core functionalities.****
 - [x] Add tests for core functionalities
 - [x] Create a demo page for visualizing the transformation and configurations.
 - [x] Design the core APIs and implement the web component adapter.
@@ -70,34 +70,35 @@ Properties that doesn't exist:
   - [x] Move the following examples to a demo file and attach links.
   - [x] Implement a demo for <auto-img/> with placeholders
   - [x] Implement a demo for defer rendering of <auto-img/> (for native elements we can only defer centralizing which is too trivial to demo)
-- [ ] Examine unit tests
-  - [ ] Implement attrValidation and add unit test
-  - [ ] Add unit tests for placeholder and defer rendering for auto-img element
-- [ ] Upload web component to npm.
+- [x] Examine unit tests
+  - [x] Implement attrValidation and add unit test
+  - [x] Add unit tests for placeholder and defer rendering for auto-img element
+- [ ] Separate the api out, so that when importing the library
+  - if user only wants webcomponent / react component / vue component, use `<script src=".../webcomponent.js"` or `import AutoImg from '@auto-img/react'`
+  - if user only wants render API, use `<script src=".../api.js"` or `import AutoImgAPI from '@auto-img/api'`.
 - [ ] Vue adapter.
 - [ ] Tests for Vue adapter.
 - [ ] In demo page, add a demo for vue component.
-- [ ] Upload Vue component to npm.
 - [ ] React adapter.
 - [ ] Tests for React adapter.
   - [ ] Passes prop correctly to webcomponent.
   - [ ] Users can call web component functions by using a ref.
 - [ ] In demo page, add a demo for react component.
-- [ ] Upload React component to npm.
 - [ ] Setup CICD pipeline.
+- [ ] Upload npm packages
 - [ ] Finalize README docs.
 - [ ] Further optimizations, more friendly API? get faster? Different version of images based on container size? Using a self hosting website and AI to auto find focus or auto upscaling?...
 
 # Hot patches
 - [x] If background is provided as `[data-auto-img-src]` in html element, it should override `background-image` style.
-- [x] If background is not provided in html element, read background from backgroundImage property.
-- [ ] Fix visualize animation.
+- [x] If background is not provided in **html** element, read background from backgroundImage property.
 - [x] Allow another format of focus to be defined  `focus="200,300"`, it's the coordinates of the focus center, and in that case, the focus area is the largest rectangle with the same w/h ratio of the image.
 - [x] Adjust the design to have codesandbox demo only for the easiest use case, for all other cases, use a full page
-- [ ] Not sure what's the best practice for wrapping a library, now both API singleton and Element type are wrapped in a namespace, how do we want to wrap the react and vue libraries?
-- [ ] Move centralizer playground to demo.
+- [x] Propagate properties to img in auto-img element to preserve the native functions such as only load when visible.
+- [x] Fix visualize animation.
+- [x] Move centralizer playground to demo.
 - [ ] Find a way to render static README files in the demo.
-- [ ] Propagate properties to img in auto-img element to preserve the native functions such as only load when visible.
+
 
 ```html
 <auto-img src="..." width="200" height="200" />

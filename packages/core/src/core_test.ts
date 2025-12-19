@@ -7,6 +7,7 @@ import {
   Centralizer,
   CentralizerClass,
   TouchAndRecenterCentralizer,
+  inputValidation,
 } from "./centralizer";
 
 /**
@@ -190,5 +191,98 @@ describe("core functionality", () => {
         expect(snapshot).toMatchSnapshot();
       });
     }
+  });
+});
+
+describe("inputValidation", () => {
+  const validInput: Partial<AutoImgInput> = {
+    viewWidth: 400,
+    viewHeight: 300,
+    imageWidth: 800,
+    imageHeight: 600,
+    focus: new Rect(new Point(100, 100), new Point(700, 500)),
+    config: { padding: 10 },
+  };
+
+  it("should pass validation for valid input", () => {
+    const errors = inputValidation(validInput);
+    expect(errors).toHaveLength(0);
+  });
+
+  it("should fail when padding is negative", () => {
+    const input = {
+      ...validInput,
+      config: { padding: -5 },
+    };
+    const errors = inputValidation(input);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0]).toContain("non-negative");
+  });
+
+  it("should fail when padding >= min(imageWidth, imageHeight)", () => {
+    const input = {
+      ...validInput,
+      imageWidth: 100,
+      imageHeight: 200,
+      config: { padding: 100 },
+    };
+    const errors = inputValidation(input);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0]).toContain("must be less than");
+  });
+
+  it("should fail when focus top-left is outside image bounds", () => {
+    const input = {
+      ...validInput,
+      focus: new Rect(new Point(-10, 50), new Point(700, 500)),
+    };
+    const errors = inputValidation(input);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0]).toContain("top-left");
+    expect(errors[0]).toContain("non-negative");
+  });
+
+  it("should fail when focus bottom-right is outside image bounds", () => {
+    const input = {
+      ...validInput,
+      imageWidth: 800,
+      imageHeight: 600,
+      focus: new Rect(new Point(100, 100), new Point(900, 500)),
+    };
+    const errors = inputValidation(input);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0]).toContain("bottom-right");
+    expect(errors[0]).toContain("within image bounds");
+  });
+
+  it("should fail when focus rectangle is invalid (tl >= br)", () => {
+    const input = {
+      ...validInput,
+      focus: new Rect(new Point(700, 100), new Point(100, 500)),
+    };
+    const errors = inputValidation(input);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0]).toContain("invalid");
+  });
+
+  it("should pass when padding is undefined", () => {
+    const input = {
+      ...validInput,
+      config: {},
+    };
+    const errors = inputValidation(input);
+    expect(errors).toHaveLength(0);
+  });
+
+  it("should pass when focus is undefined", () => {
+    const input = {
+      viewWidth: 400,
+      viewHeight: 300,
+      imageWidth: 800,
+      imageHeight: 600,
+      config: { padding: 10 },
+    };
+    const errors = inputValidation(input);
+    expect(errors).toHaveLength(0);
   });
 });

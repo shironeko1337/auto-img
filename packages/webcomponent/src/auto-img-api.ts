@@ -99,37 +99,69 @@ export class AutoImgAPI {
    */
   async render(element: HTMLElement, waitResize = false) {
     let model: AutoImgModel;
+    let isNewModel = false;
 
     if (!this.elementModelMap.has(element)) {
       model = this.attachModel(element);
+      isNewModel = true;
     } else {
       model = this.elementModelMap.get(element)!;
     }
 
-    if (model.readAttrs()) {
-      model.defer = false;
+    // Only read attrs for new models; existing models already have their attrs
+    if (isNewModel && !model.readAttrs()) {
+      return;
+    }
 
-      if (waitResize) {
-        await model.loadAndRender();
-      } else {
-        // temporarily set to true just to prevent render automatically
-        // because we want to set isSizeSteady to true exactly before render.
-        // this value is not set back to `false` or original value because
-        // there is no way we can track if it's set during rendering or not (we don't have to).
-        model.defer = true;
-        await model.loadAndRender();
-        model.isSizeSteady = true;
-        await model.render();
-        model.defer = false;
-      }
+    model.defer = false;
+
+    if (waitResize) {
+      // Wait for resize to complete by waiting for resizeState to become stable
+      await new Promise<void>((resolve) => {
+        if (model.resizeState?.stableValue) {
+          // Already stable, resolve immediately
+          resolve();
+        } else {
+          // Wait for it to become stable
+          const originalOnStable = model.resizeState?.setOnResizeStable;
+          model.resizeState?.setOnResizeStable((size: any) => {
+            if (originalOnStable) {
+              originalOnStable.call(model.resizeState, size);
+            }
+            resolve();
+          });
+        }
+      });
+      await model.loadAndRender();
+    } else {
+      // temporarily set to true just to prevent render automatically
+      // because we want to set isSizeSteady to true exactly before render.
+      // this value is not set back to `false` or original value because
+      // there is no way we can track if it's set during rendering or not (we don't have to).
+      model.defer = true;
+      await model.loadAndRender();
+      model.isSizeSteady = true;
+      await model.render();
+      model.defer = false;
     }
   }
 
   private attachModel(element: HTMLElement) {
     if (!this.elementModelMap.has(element)) {
-      const model = new AutoImgModel(element, this);
-      this.watch(element, model);
-      return model;
+      // Check if element already has a model (from another API instance)
+      const existingModel = (element as any).model as AutoImgModel | undefined;
+      if (existingModel) {
+        // Adopt the existing model instead of creating a new one
+        // Don't call watch() as the element is already being watched by another API
+        this.elementModelMap.set(element, existingModel);
+        // Update the model's config to use this API's config
+        existingModel.config = this.config;
+        return existingModel;
+      } else {
+        const model = new AutoImgModel(element, this);
+        this.watch(element, model);
+        return model;
+      }
     } else {
       return this.elementModelMap.get(element)!;
     }

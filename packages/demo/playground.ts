@@ -1,10 +1,12 @@
-import { Rect, Point, Image } from "./base";
-import { TestInput } from "./core_test";
 import {
+  Rect,
+  Point,
+  Image,
+  TouchAndRecenterCentralizer,
   Centralizer,
   CentralizerClass,
-  TouchAndRecenterCentralizer,
-} from "./centralizer";
+  TestInput,
+} from "autoimg-core";
 import { CanvasHelper } from "./canvas_helper";
 
 // Centralized CSS styles

@@ -16,7 +16,8 @@ export type AutoImgInput = {
 
 export function inputValidation(input: Partial<AutoImgInput>) {
   const errors: string[] = [];
-  const { viewWidth, viewHeight, imageWidth, imageHeight } = input;
+  const { viewWidth, viewHeight, imageWidth, imageHeight, focus, config } =
+    input;
   const nonEmptyContainerAndImage =
     typeof viewWidth == "number" &&
     viewWidth > 0 &&
@@ -28,6 +29,37 @@ export function inputValidation(input: Partial<AutoImgInput>) {
     imageHeight > 0;
 
   if (nonEmptyContainerAndImage) {
+    // Validate padding: 0 <= padding < min(imageWidth, imageHeight)
+    const padding = config?.padding;
+    if (padding !== undefined && padding !== null) {
+      const minImageDimension = Math.min(imageWidth!, imageHeight!);
+      if (padding < 0) {
+        errors.push(`Padding must be non-negative, got ${padding}`);
+      } else if (padding >= minImageDimension) {
+        errors.push(
+          `Padding (${padding}) must be less than min(imageWidth, imageHeight) = ${minImageDimension}`
+        );
+      }
+    }
+
+    // Validate focus is within image bounds
+    if (focus) {
+      if (focus.tl.x < 0 || focus.tl.y < 0) {
+        errors.push(
+          `Focus top-left corner (${focus.tl.x}, ${focus.tl.y}) must be within image bounds (non-negative)`
+        );
+      }
+      if (focus.br.x > imageWidth! || focus.br.y > imageHeight!) {
+        errors.push(
+          `Focus bottom-right corner (${focus.br.x}, ${focus.br.y}) must be within image bounds (${imageWidth}, ${imageHeight})`
+        );
+      }
+      if (focus.tl.x >= focus.br.x || focus.tl.y >= focus.br.y) {
+        errors.push(
+          `Focus rectangle is invalid: top-left (${focus.tl.x}, ${focus.tl.y}) must be less than bottom-right (${focus.br.x}, ${focus.br.y})`
+        );
+      }
+    }
   }
   return errors;
 }
@@ -92,12 +124,19 @@ export class TouchAndRecenterCentralizer extends Centralizer {
     const image = this.image.rect;
     const focus = this.image.focus;
     const container = this.container;
-    await visualizer(this.image, "initial state", "initialized");
+    await visualizer(
+      this.image,
+      "Moving focus to container center",
+      "initialized"
+    );
 
     // Move focus center to container center
     let [shiftX, shiftY] = focus.moveCenter(container);
     image.shift(shiftX, shiftY);
-    await visualizer(this.image, "center moved");
+    await visualizer(
+      this.image,
+      "Scaling up/down to make focus border to have at least <padding> distance to border"
+    );
 
     // Scale up / down to make focus border to have at least `padding`
     // distance to the border
@@ -116,6 +155,11 @@ export class TouchAndRecenterCentralizer extends Centralizer {
       this.image.scale(scale, scale, focus.center);
     }
 
+    await visualizer(
+      this.image,
+      "Try to get rid of the blanks by shifting the image"
+    );
+
     // Can we get rid of the blanks by shifting the image?
     const topSpace = Math.max(image.tl.y, 0),
       bottomSpace = Math.max(container.br.y - image.br.y, 0),
@@ -131,13 +175,15 @@ export class TouchAndRecenterCentralizer extends Centralizer {
     );
 
     image.shift(-shiftX, -shiftY);
-    await visualizer(this.image, "position adjusted to remove blank space");
 
     // At this step, if we still can't remove the blanks, but distortion is allowed
     // we stretch the image to fill in the blanks.
 
     if (allowDistortion) {
-      await visualizer(this.image, "focus stretched");
+      await visualizer(
+        this.image,
+        "Try stretch the image to fill in the blanks"
+      );
       let scaleY =
         (Math.max(image.tl.y, 0) +
           Math.max(container.br.y - image.br.y, 0) +
@@ -150,13 +196,8 @@ export class TouchAndRecenterCentralizer extends Centralizer {
         image.width;
 
       this.image.scale(scaleX, scaleY, focus.center);
-      await visualizer(
-        this.image,
-        "image stretched to remove blank space",
-        "end"
-      );
-    } else {
-      await visualizer(this.image, "focus stretched", "end");
     }
+
+    await visualizer(this.image, "Finish rendering", "end");
   }
 }

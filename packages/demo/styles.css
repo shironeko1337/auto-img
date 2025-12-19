@@ -3,6 +3,9 @@
  */
 @import "tailwindcss";
 
+/* Tell Tailwind v4 which files to scan for classes */
+@source "./**/*.{html,ts,js}";
+
 @layer base {
   /* Flexbox base: fx = row, fxc = column */
   /* Format: .fx[c]-[justify][align] */

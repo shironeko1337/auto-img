@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build:watch": "tsup src/index.ts --format esm,cjs --dts --watch",
     "visualize:build": "tsup --config tsup.visualize.config.ts",
     "visualize": "npm run visualize:build && start visualizer.html",
     "visualize:roi": "npm run visualize:build && start visualizer_roi.html",

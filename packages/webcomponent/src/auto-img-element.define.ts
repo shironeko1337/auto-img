@@ -34,6 +34,15 @@ interface AutoImgAttributes {
   "focus.tl.y"?: string;
   "focus.br.x"?: string;
   "focus.br.y"?: string;
+  "img-style"?: string;
+  // Native img attributes (with img- prefix)
+  "img-alt"?: string;
+  "img-loading"?: "lazy" | "eager";
+  "img-title"?: string;
+  "img-draggable"?: boolean | "true" | "false";
+  "img-crossorigin"?: "anonymous" | "use-credentials" | "";
+  "img-decoding"?: "async" | "sync" | "auto";
+  "img-fetchpriority"?: "high" | "low" | "auto";
 }
 
 // TypeScript type declarations for JSX/TSX support

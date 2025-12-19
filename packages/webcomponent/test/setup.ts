@@ -119,3 +119,16 @@ class MutationObserverMock {
 // Install mocks globally
 global.ResizeObserver = ResizeObserverMock as any;
 global.MutationObserver = MutationObserverMock as any;
+
+// Test utility functions
+/**
+ * Waits for async operations to complete (default 10ms)
+ */
+export const flush = (ms: number = 0): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+/**
+ * Alias for flush with custom delay
+ */
+export const wait = flush;

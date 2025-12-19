@@ -11,10 +11,26 @@ import {
 } from "./base";
 import type { AutoImgAPI } from "./auto-img-api";
 
+const IMG_ATTR_PREFIX = "img-";
 /**
  * Attributes exclusive to auto-img elements.
  */
-const AutoImgElementAttrs = ["src", "width", "height"];
+const ATTRS_FOR_RENDER = ["src", "width", "height"];
+const IMG_ATTRIBUTE_DEFAULTS = {
+  alt: "",
+  loading: undefined,
+  title: "",
+  draggable: false,
+  crossOrigin: "",
+  decoding: "async",
+  fetchPriority: false,
+};
+
+const AutoImgElementAttrs = ATTRS_FOR_RENDER.concat(
+  Object.keys(IMG_ATTRIBUTE_DEFAULTS).map((attr) => `${IMG_ATTR_PREFIX}${attr}`)
+);
+
+type PenetratableImgAttrs = keyof typeof IMG_ATTRIBUTE_DEFAULTS;
 
 // Global API reference set by auto-img-element.define.ts
 let _autoImgAPI: AutoImgAPI | null = null;
@@ -39,21 +55,26 @@ export class AutoImgElement extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
 
-    this.style.width = getDimensionValue(this.getAttribute("width")) || "100%";
-    this.style.height =
-      getDimensionValue(this.getAttribute("height")) || "100%";
     this.style.position = "relative";
     this.style.overflow = "hidden";
     this.style.display = "block";
+
     this.img = document.createElement("img");
     this.img.style.position = "absolute";
     this.img.style.display = "block";
+    this.img.style.userSelect = "none";
+    this._applyDimension({
+      width: this.getAttribute("width"),
+      height: this.getAttribute("height"),
+    });
+
+    this.img.setAttribute("part", "image");
+    this._applyAttributes();
+
     this.shadowRoot.appendChild(this.img);
   }
 
   connectedCallback() {
-    // Auto-attach model if not already attached
-    // This is needed for elements created dynamically after initial page load
     if (!this.model && _autoImgAPI) {
       _autoImgAPI.load(this);
     } else if (this.model?.readAttrs()) {
@@ -66,17 +87,19 @@ export class AutoImgElement extends HTMLElement {
     oldValue: string | null,
     newValue: string | null
   ) {
-    // Update styles when width or height attributes change
-    if (name === "width" && newValue !== oldValue) {
-      this.style.width = getDimensionValue(newValue) || "100%";
-    } else if (name === "height" && newValue !== oldValue) {
-      this.style.height = getDimensionValue(newValue) || "100%";
-    }
+    if (
+      oldValue !== newValue &&
+      (ATTRS_FOR_RENDER.includes(name) || CommonHostAttrs.includes(name))
+    ) {
+      if (["width", "height"].includes(name)) {
+        this._applyDimension({ name: newValue || "100%" });
+      }
 
-    // If model exists, read attrs and potentially re-render
-    if (this.model && AutoImgElementAttrs.includes(name)) {
-      if (this.model.readAttrs()) {
-        this.model.loadAndRender();
+      if (this.model) {
+        // src and all other model attributes would be handled here
+        if (this.model.readAttrs()) {
+          this.model.loadAndRender();
+        }
       }
     }
   }
@@ -161,5 +184,30 @@ export class AutoImgElement extends HTMLElement {
     this.img.style.width = "100%";
     this.img.style.height = "100%";
     this.img.style.objectFit = "none";
+  }
+
+  private _applyAttribute(key: PenetratableImgAttrs, value: any) {
+    value ||= IMG_ATTRIBUTE_DEFAULTS[key];
+    if (value === undefined || value === null) {
+      if (this.img.hasAttribute(key)) {
+        this.img.removeAttribute(key);
+      }
+    } else {
+      this.img.setAttribute(key, value);
+    }
+  }
+
+  private _applyAttributes() {
+    for (const key in IMG_ATTRIBUTE_DEFAULTS) {
+      this._applyAttribute(
+        key as PenetratableImgAttrs,
+        this.getAttribute(`${IMG_ATTR_PREFIX}${key}`)
+      );
+    }
+  }
+
+  private _applyDimension({ width, height }: any) {
+    this.style.width = width ? getDimensionValue(width) : "100%";
+    this.style.height = height ? getDimensionValue(height) : "100%";
   }
 }

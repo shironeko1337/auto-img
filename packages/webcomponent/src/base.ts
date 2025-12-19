@@ -21,13 +21,14 @@ export type PixelSize = { width: number; height: number };
  * when it's stable.
  */
 export class MutableState<T> {
+  static DEFAULT_TIME_BEFORE_STABLE = 300
   initialized = false;
   isStable = true;
   private onStable?: Function;
   private onResize?: Function;
   private value?: T;
   private lastChangeTs: any = -1;
-  constructor(private timeUntilStable = 300) {}
+  constructor(private timeUntilStable = MutableState.DEFAULT_TIME_BEFORE_STABLE) {}
 
   set(value: T) {
     this.initialized = true;
@@ -199,8 +200,23 @@ function getFocus(input: any) {
  * as it's not for the centralizer algorithm.
  */
 function attrValidation(model: AutoImgModel) {
-  if (model.isAutoImg()) {
-  } else {
+  // Check if imageSrc is present
+  if (!model.imageSrc || model.imageSrc.trim() === "") {
+    const elementType = model.isAutoImg() ? 'auto-img' : 'native element';
+    const requiredAttr = model.isAutoImg()
+      ? '"src" attribute'
+      : '"data-auto-img-src" attribute or background-image style';
+
+    console.warn(`[AutoImg] Missing image source for ${elementType}. Provide ${requiredAttr}.`, model.host);
+    model.host.dispatchEvent(new CustomEvent('autoimg-error', {
+      detail: {
+        type: 'missing-src',
+        message: `Missing image source. Provide ${requiredAttr}.`
+      },
+      bubbles: true,
+      composed: true
+    }));
+    return false;
   }
   return true;
 }
@@ -306,11 +322,31 @@ export class AutoImgModel {
     const tag = this.host.tagName;
     if (tag === "AUTO-IMG") {
       const el = this.host as AutoImgElement;
+
+      // Check if element's internal img is already loaded
+      const internalImg = (el as any).img as HTMLImageElement;
+      if (internalImg && internalImg.complete && internalImg.naturalWidth > 0) {
+        // Image is already loaded in the element, just update model state if needed
+        if (!this.isImageLoaded) {
+          this.onImageLoaded({
+            width: internalImg.naturalWidth,
+            height: internalImg.naturalHeight,
+          });
+        }
+        return;
+      }
+
+      // If model already has valid image dimensions, skip loading
+      if (
+        this.isImageLoaded &&
+        this.centralizerInput.imageWidth &&
+        this.centralizerInput.imageHeight
+      ) {
+        return;
+      }
+
       if (this.placeholder && !el.isImageLoaded(this.imageSrc)) {
-        await el.loadImage(
-          this.placeholder,
-          this.config.loadImageTimeout
-        );
+        await el.loadImage(this.placeholder, this.config.loadImageTimeout);
         el.showLoadedImage();
         el.setPositionForPlaceholder();
         if (this.imageSrc) {
@@ -437,14 +473,13 @@ export class AutoImgModel {
       /* Expand scale of four edges, conditions of focus staying in the image */
       const sortedScales: any = [
         [y, y * ratio <= xDistance],
-        [(imageWidth - x) / ratio, imageWidth - x <= yDistance],
+        [(imageWidth - x) / ratio, (imageWidth - x) / ratio <= yDistance],
         [imageHeight - y, (imageHeight - y) * ratio <= xDistance],
-        [x, x / ratio <= yDistance],
+        [x / ratio, x / ratio <= yDistance],
       ]
         .filter(([scale, condition]) => condition)
         .map(([scale, condition]) => scale)
         .sort((a, b) => (a < b ? 1 : -1));
-
       if (sortedScales.length) {
         const scale = sortedScales[0];
 

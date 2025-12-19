@@ -7,16 +7,22 @@
   "type": "module",
   "scripts": {
     "build:js": "tsup",
-    "build:css": "tailwindcss -i ./styles.css -o ./dist/styles.css --minify",
+    "build:css": "tailwindcss -i ./styles.css -o ./dist/styles.css",
     "build": "npm run build:js && npm run build:css",
-    "build:watch": "tsup --watch & tailwindcss -i ./styles.css -o ./dist/styles.css --watch",
+    "watch:js": "tsup --watch",
+    "watch:css": "tailwindcss -i ./styles.css -o ./dist/styles.css --watch",
+    "build:watch": "concurrently \"npm:watch:js\" \"npm:watch:css\"",
+    "dev": "concurrently \"npm:build\" \"npm:watch:js\" \"npm:watch:css\" \"npx live-server --port=3000 --watch=dist,index.html,playground-init.js --open\"",
     "demo": "npm run build && npx serve .",
     "demo:watch": "npm run build:watch"
   },
   "dependencies": {
-    "autoimg-webcomponent": "*"
+    "autoimg-webcomponent": "*",
+    "autoimg-core": "*"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
+    "live-server": "^1.2.2",
     "tailwindcss": "^4.1.17"
   }
 }
