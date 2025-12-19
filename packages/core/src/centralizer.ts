@@ -198,6 +198,6 @@ export class TouchAndRecenterCentralizer extends Centralizer {
       this.image.scale(scaleX, scaleY, focus.center);
     }
 
-    await visualizer(this.image, "Finish rendering", "end");
+    await visualizer(this.image, "Finish positioning.", "end");
   }
 }
