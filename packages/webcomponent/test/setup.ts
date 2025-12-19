@@ -58,7 +58,7 @@ class MutationObserverMock {
     this.config = options || null;
 
     // Override appendChild and removeChild to trigger callbacks
-    if (target && 'appendChild' in target && 'removeChild' in target) {
+    if (target && "appendChild" in target && "removeChild" in target) {
       const originalAppendChild = target.appendChild.bind(target);
       const originalRemoveChild = target.removeChild.bind(target);
 
@@ -67,7 +67,7 @@ class MutationObserverMock {
         setTimeout(() => {
           if (this.config?.childList) {
             const mutation: MutationRecord = {
-              type: 'childList',
+              type: "childList",
               target: target,
               addedNodes: [node] as any,
               removedNodes: [] as any,
@@ -88,7 +88,7 @@ class MutationObserverMock {
         setTimeout(() => {
           if (this.config?.childList) {
             const mutation: MutationRecord = {
-              type: 'childList',
+              type: "childList",
               target: target,
               addedNodes: [] as any,
               removedNodes: [node] as any,
@@ -115,6 +115,43 @@ class MutationObserverMock {
     return [];
   }
 }
+
+// Mock Image loading for jsdom
+// Override HTMLImageElement.prototype to simulate image loading
+const originalSrcDescriptor = Object.getOwnPropertyDescriptor(
+  HTMLImageElement.prototype,
+  "src"
+);
+Object.defineProperty(HTMLImageElement.prototype, "src", {
+  get: function () {
+    return originalSrcDescriptor?.get?.call(this) || "";
+  },
+  set: function (value: string) {
+    originalSrcDescriptor?.set?.call(this, value);
+
+    // Simulate async image loading
+    setTimeout(() => {
+      // Set naturalWidth/Height to simulate successful load
+      Object.defineProperty(this, "naturalWidth", {
+        value: 272,
+        configurable: true,
+      });
+      Object.defineProperty(this, "naturalHeight", {
+        value: 92,
+        configurable: true,
+      });
+
+      // Trigger onload if handler is set
+      if (this.onload) {
+        this.onload(new Event("load") as any);
+      }
+
+      // Dispatch load event for addEventListener listeners
+      this.dispatchEvent(new Event("load"));
+    }, 0);
+  },
+  configurable: true,
+});
 
 // Install mocks globally
 global.ResizeObserver = ResizeObserverMock as any;

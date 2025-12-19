@@ -423,7 +423,7 @@ export class AutoImgModel {
             this.config.loadImageTimeout
           );
         }),
-      ]).then(this.onImageLoaded);
+      ]).then(this.onImageLoaded.bind(this));
 
       img.src = this.imageSrc;
     }
@@ -464,6 +464,7 @@ export class AutoImgModel {
     }
 
     const errors = inputValidation(this.centralizerInput);
+
     if (!errors.length) {
       const input = this.centralizerInput;
       const containerRect = Rect.fromDimension(

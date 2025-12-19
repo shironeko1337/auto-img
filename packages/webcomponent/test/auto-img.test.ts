@@ -5,7 +5,7 @@ import { AutoImgElement } from "../src/auto-img-element";
 import { getDimensionValue, MutableState } from "../src/base";
 import { flush } from "./setup";
 
-const EXAMPLE_IMAGE_URL = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
+const EXAMPLE_IMAGE_URL = "https://example.com/image.jpg";
 const EXAMPLE_PLACEHOLDER_URL =
   "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
@@ -67,7 +67,7 @@ describe("AutoImg", () => {
   });
 
   describe("native html element", () => {
-    it.only("should use data-auto-img-src for native elements", () => {
+    it("should use data-auto-img-src for native elements", () => {
       const api = new AutoImgAPI();
       const element = document.createElement("div");
       element.setAttribute("data-auto-img-src", EXAMPLE_IMAGE_URL);
@@ -474,7 +474,7 @@ describe("AutoImg", () => {
       element.remove();
     });
 
-    it.only(
+    it(
       "it should render element immediately even if the resize state is" +
         "not marked as stable when calling render with waitResize = false",
       async () => {
@@ -491,10 +491,10 @@ describe("AutoImg", () => {
         model.isImageLoaded = true;
         model.centralizerInput.imageWidth = 1;
         model.centralizerInput.imageHeight = 1;
+        const setPositionSpy = vi.spyOn(element, "setPosition");
         await api.render(element, false);
         await flush();
-        const setPositionSpy = vi.spyOn(element, "setPosition");
-        expect(setPositionSpy).toBeCalled();
+        expect(setPositionSpy).toHaveBeenCalled();
       }
     );
 
