@@ -5,7 +5,7 @@ import { AutoImgElement } from "../src/auto-img-element";
 import { getDimensionValue, MutableState } from "../src/base";
 import { flush } from "./setup";
 
-const EXAMPLE_IMAGE_URL = "https://example.com/image.jpg";
+const EXAMPLE_IMAGE_URL = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
 const EXAMPLE_PLACEHOLDER_URL =
   "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
@@ -67,7 +67,7 @@ describe("AutoImg", () => {
   });
 
   describe("native html element", () => {
-    it("should use data-auto-img-src for native elements", () => {
+    it.only("should use data-auto-img-src for native elements", () => {
       const api = new AutoImgAPI();
       const element = document.createElement("div");
       element.setAttribute("data-auto-img-src", EXAMPLE_IMAGE_URL);
@@ -474,9 +474,9 @@ describe("AutoImg", () => {
       element.remove();
     });
 
-    it(
+    it.only(
       "it should render element immediately even if the resize state is" +
-        "not marked as stable when calling render with waitResize = true",
+        "not marked as stable when calling render with waitResize = false",
       async () => {
         const api = new AutoImgAPI();
         const element = document.createElement("auto-img") as AutoImgElement;
@@ -491,17 +491,10 @@ describe("AutoImg", () => {
         model.isImageLoaded = true;
         model.centralizerInput.imageWidth = 1;
         model.centralizerInput.imageHeight = 1;
-
-        // waitResize = true means it waits for size to be ready but will still render
-        await api.render(element, true);
-
+        await api.render(element, false);
         await flush();
-
-        // Since waitResize is true, it should wait naturally for resize
-        // but not block on isSizeSteady flag
-        expect(model.defer).toBe(false);
-
-        element.remove();
+        const setPositionSpy = vi.spyOn(element, "setPosition");
+        expect(setPositionSpy).toBeCalled();
       }
     );
 

@@ -17,11 +17,11 @@
          class="menu hover-lift-container bg1 h-[-webkit-fill-available] min-h-screen fxc-ss gap-6 w-[24rem] overflow-auto ft-headline">
       <div class="fx-bc gap-8 w-[24rem] py-4 px-8 fixed h-18">
         <div class="title ">
-          <span>AutoImg</span>&nbsp;v<span>0.1</span>
-          <iconify-icon class="text-xl"
+          <span>AutoImg</span><span class="text-base"> v0.1</span>
+          <iconify-icon class="text-2xl"
                         icon="mdi:github"></iconify-icon>
           <iconify-icon id="light-dark-icon"
-                        class="text-xl cursor-pointer"
+                        class="text-2xl cursor-pointer"
                         icon="material-symbols:dark-mode-outline-rounded"></iconify-icon>
         </div>
         <iconify-icon id="togglemenuicon"
@@ -32,20 +32,35 @@
         <div><a href="#">Quick Start</a></div>
         <div><a href="#">Install</a></div>
         <div class="no-hover-lift fx-bc w-[18rem] controller"
-             data-control="showcaseitems">
-          <span>Showcase</span>
+             data-control="webcomponent-showcaseitems">
+          <span>Web component</span>
           <iconify-icon data-controller-icon
                         class="icon cursor-pointer"
                         icon="ic:baseline-expand-more"></iconify-icon>
         </div>
         <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
-             id="showcaseitems">
-          <div><a href="#section-imagewithfixedsize">Image with fixed size</a></div>
-          <div><a href="#section-imagefilledincontainer">Image filled in container</a></div>
-          <div><a href="#section-imagestayingfocused">Image staying focused when resizing</a></div>
-          <div><a href="#section-lazyloadedimage">Lazy loaded image</a></div>
-          <div><a href="#section-slowlyloadedimage">Slowly loaded image</a></div>
+             id="webcomponent-showcaseitems">
+          <div><a href="#webcomponent-imagewithfixedsize">Image with fixed size</a></div>
+          <div><a href="#webcomponent-imagefilledincontainer">Image filled in container</a></div>
+          <div><a href="#webcomponent-imagestayingfocused">Image staying focused when resizing</a>
+          </div>
+          <div><a href="#webcomponent-lazyloadedimage">Lazy loaded image</a></div>
+          <div><a href="#webcomponent-slowlyloadedimage">Slowly loaded image</a></div>
         </div>
+
+        <div class="menu-item-after-list no-hover-lift fx-bc w-[18rem] controller"
+             data-control="api-showcaseitems">
+          <span>Native element</span>
+          <iconify-icon data-controller-icon
+                        class="icon cursor-pointer"
+                        icon="ic:baseline-expand-more"></iconify-icon>
+        </div>
+        <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
+             id="api-showcaseitems">
+          <div><a href="#api-imagefilledincontainer">Image filled in container</a></div>
+          <div><a href="#api-imagestayingfocused">Image staying focused when resizing</a></div>
+        </div>
+
         <div class="menu-item-after-list"><a href="playground.html">Playground</a></div>
         <div><a href="#">API</a></div>
       </div>
@@ -53,10 +68,11 @@
 
     <div id="content"
          class="w-full min-h-screen fxc-sc">
-      <div class="fxc-sc text-left w-[70%] gap-16">
+      <div class="fxc-sc text-left w-[80%] gap-16"
+           id="webcomponent-content">
         <div class="fxc-ss w-full gap-4">
           <div class="title font-medium">
-            Showcase
+            Web component showcase
           </div>
           <div class="desc">
             <p>
@@ -89,7 +105,7 @@
           </div>
         </div>
         <div class="fx-bc gap-20 w-full"
-             id="section-imagewithfixedsize">
+             id="webcomponent-imagewithfixedsize">
           <div class="fxc-ss max-w-[50vmin] gap-4">
             <div class="title font-medium">Image with fixed size</div>
             <div class="desc">Example usage in a 200 × 200 container.
@@ -116,7 +132,7 @@
         </div>
 
         <div class="fx-bc gap-20 w-full"
-             id="section-imagefilledincontainer">
+             id="webcomponent-imagefilledincontainer">
           <div class="fxc-ss max-w-[50vmin] gap-4">
             <div class="title font-medium">Image filled in container</div>
             <div class="desc">Example usage in a container with uncertain size.
@@ -145,7 +161,7 @@
           </div>
         </div>
         <div class="fx-bc gap-20 w-full"
-             id="section-imagestayingfocused">
+             id="webcomponent-imagestayingfocused">
           <div class="fxc-ss max-w-[50vmin] gap-4">
             <div class="title font-medium">Image staying focused when resizing</div>
             <div class="desc">Example usage in a responsive container with
@@ -182,7 +198,7 @@
         </div>
 
         <div class="fx-bc gap-20 w-full"
-             id="section-lazyloadedimage">
+             id="webcomponent-lazyloadedimage">
           <div class="fxc-ss max-w-[50vmin] gap-4">
             <div class="title font-medium">Lazy loaded image</div>
             <div class="desc">
@@ -238,7 +254,7 @@
         </div>
 
         <div class="fx-bc gap-20 w-full"
-             id="section-slowlyloadedimage">
+             id="webcomponent-slowlyloadedimage">
           <div class="fxc-ss max-w-[50vmin] gap-4">
             <div class="title font-medium">Slowly loaded image</div>
             <div class="desc">
@@ -272,9 +288,78 @@
           </div>
         </div>
 
+        <div class="fx-bc gap-20 w-full"
+             id="api-imagefilledincontainer">
+          <div class="fxc-ss max-w-[50vmin] gap-4">
+            <div class="title font-medium">Image filled in container</div>
+            <div class="desc">Example usage in a container with uncertain size.
+            </div>
+            <p>
+            <pre><code class="language-html">&lt;div style="width:200px; height:200px;"&gt;
+  &lt;div
+    style="width: 100%; height: 100%; background-image: ...;"
+    data-auto-img
+    data-auto-img-focus="27,235;452,490"
+    data-auto-img-padding="10"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
+&lt;script&gt;AutoImgAPI.loadAll('[data-auto-img]');&lt;/script&gt;
+
+</code></pre>
+            </p>
+          </div>
+          <div class="fxc-cc">
+            <div style="width:200px; height:200px;">
+              <div style="width: 100%; height: 100%;background-image: url('https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE')"
+                   data-auto-img
+                   data-auto-img-focus="27,235;452,490"
+                   data-auto-img-padding="10">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fx-bc gap-20 w-full"
+             id="api-imagestayingfocused">
+          <div class="fxc-ss max-w-[50vmin] gap-4">
+            <div class="title font-medium">Image staying focused when resizing</div>
+            <div class="desc">Example usage in a responsive container with
+              <p>height of <input class="text-end w-[100px] bordered"
+                       type="number"
+                       value="200"
+                       name="height"
+                       onchange="document.querySelector('#resizablecontainer').style.height=this.value+'px'" />
+                px and width of <input class="text-end w-[100px] bordered"
+                       type="number"
+                       value="200"
+                       name="width"
+                       onchange="document.querySelector('#resizablecontainer').style.width=this.value+'px'" />
+                px. </p>
+            </div>
+            <p>
+            <pre><code class="language-html">&lt;auto-img
+  src="https://fastly.picsum.photos/id/200/800/600.jpg?
+  hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+  focus="27,235;452,490"
+  padding="10"&gt;&lt;/auto-img&gt;</code></pre>
+            </p>
+          </div>
+          <div class="fxc-cc">
+            <div id="resizablecontainer">
+              <div class="bordered"
+                   style="width:100%;height:100%;">
+                <auto-img src="https://fastly.picsum.photos/id/200/800/600.jpg?hmac=wHrUWgaA9t7IwxTeGzmRrvvnBIMCFvJ29yZVL8dr8EE"
+                          focus="27,235;452,490"
+                          padding="10"></auto-img>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
+  </div>
   </div>
   <link rel="preconnect"
         href="https://fonts.googleapis.com">
@@ -321,7 +406,15 @@
 
     .controlled.controlled-opened {
       display: flex;
-      height: 7rem;
+      height: 12rem;
+    }
+
+    #webcomponent-showcaseitems.controlled-opened {
+      height: 12rem;
+    }
+
+    #api-showcaseitems.controlled-opened {
+      height: 6rem;
     }
 
     .reversed {
@@ -396,7 +489,7 @@
       toggleMenuEl.style.position = 'fixed';
       toggleMenuEl.style.top = top + 'px';
       toggleMenuLeft = toggleMenuEl.style.left = left + 'px';
-      console.log(left,top);
+      console.log(left, top);
       document.body.appendChild(toggleMenuEl)
 
       toggleMenuEl.addEventListener('click', () => {
@@ -419,6 +512,8 @@
                           placeholder="data:image/png;base64,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"></auto-img>
               `
       })
+
+      AutoImgAPI.loadAll('[data-auto-img]');
     });
   </script>
 </body>

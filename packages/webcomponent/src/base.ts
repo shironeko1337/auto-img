@@ -21,14 +21,16 @@ export type PixelSize = { width: number; height: number };
  * when it's stable.
  */
 export class MutableState<T> {
-  static DEFAULT_TIME_BEFORE_STABLE = 300
+  static DEFAULT_TIME_BEFORE_STABLE = 300;
   initialized = false;
   isStable = true;
   private onStable?: Function;
   private onResize?: Function;
   private value?: T;
   private lastChangeTs: any = -1;
-  constructor(private timeUntilStable = MutableState.DEFAULT_TIME_BEFORE_STABLE) {}
+  constructor(
+    private timeUntilStable = MutableState.DEFAULT_TIME_BEFORE_STABLE
+  ) {}
 
   set(value: T) {
     this.initialized = true;
@@ -202,20 +204,25 @@ function getFocus(input: any) {
 function attrValidation(model: AutoImgModel) {
   // Check if imageSrc is present
   if (!model.imageSrc || model.imageSrc.trim() === "") {
-    const elementType = model.isAutoImg() ? 'auto-img' : 'native element';
+    const elementType = model.isAutoImg() ? "auto-img" : "native element";
     const requiredAttr = model.isAutoImg()
       ? '"src" attribute'
       : '"data-auto-img-src" attribute or background-image style';
 
-    console.warn(`[AutoImg] Missing image source for ${elementType}. Provide ${requiredAttr}.`, model.host);
-    model.host.dispatchEvent(new CustomEvent('autoimg-error', {
-      detail: {
-        type: 'missing-src',
-        message: `Missing image source. Provide ${requiredAttr}.`
-      },
-      bubbles: true,
-      composed: true
-    }));
+    console.warn(
+      `[AutoImg] Missing image source for ${elementType}. Provide ${requiredAttr}.`,
+      model.host
+    );
+    model.host.dispatchEvent(
+      new CustomEvent("autoimg-error", {
+        detail: {
+          type: "missing-src",
+          message: `Missing image source. Provide ${requiredAttr}.`,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
     return false;
   }
   return true;
@@ -244,6 +251,10 @@ export class AutoImgModel {
   // rendering isn't controlled by AutoImg model, so we only defer centralizing.
   defer = false;
   resizeState?: MutableState<PixelSize>;
+  // Loaded images for a native element, everytime the image src changes, there
+  // would be a new value set. Assume browser caches result, if the src is found
+  // in this set, the image is considered to be already loaded.
+  loadedImages: Map<string, PixelSize>;
 
   constructor(element: HTMLElement, api: AutoImgAPI) {
     this.centralizerInput = {};
@@ -253,6 +264,7 @@ export class AutoImgModel {
     state.setOnResize(() => (this.isSizeSteady = false));
     state.setOnResizeStable(this.onSizeSteady.bind(this));
     this.resizeState = state;
+    this.loadedImages = new Map();
 
     if (this.isAutoImg()) {
       (this.host as AutoImgElement).model = this;
@@ -320,86 +332,126 @@ export class AutoImgModel {
    */
   async loadAndRender() {
     const tag = this.host.tagName;
+
+      // If there isn't a valid image src, skip loading.
+      if (!this.imageSrc) return;
+
+      // If the image is already loaded, then try rendering
+      if(this.isImageLoaded){
+        const dimensions = this.loadedImages.get(this.imageSrc);
+        if(dimensions){
+          this.onImageLoaded(dimensions)
+          return;
+        } else {
+          // Why loaded flag is flipped, but we don't get dimension data?
+        }
+      }
+
     if (tag === "AUTO-IMG") {
       const el = this.host as AutoImgElement;
 
-      // Check if element's internal img is already loaded
-      const internalImg = (el as any).img as HTMLImageElement;
-      if (internalImg && internalImg.complete && internalImg.naturalWidth > 0) {
-        // Image is already loaded in the element, just update model state if needed
-        if (!this.isImageLoaded) {
-          this.onImageLoaded({
-            width: internalImg.naturalWidth,
-            height: internalImg.naturalHeight,
-          });
-        }
-        return;
-      }
-
       // If model already has valid image dimensions, skip loading
-      if (
-        this.isImageLoaded &&
-        this.centralizerInput.imageWidth &&
-        this.centralizerInput.imageHeight
-      ) {
-        return;
-      }
+      // if (
+      //   this.isImageLoaded &&
+      //   this.centralizerInput.imageWidth &&
+      //   this.centralizerInput.imageHeight
+      // ) {
+      //   return;
+      // }
 
-      if (this.placeholder && !el.isImageLoaded(this.imageSrc)) {
+      if (this.placeholder) {
+        // If placeholder is present, load placeholder, show it immediately,
+        // then load image and try rendering.
         await el.loadImage(this.placeholder, this.config.loadImageTimeout);
         el.showLoadedImage();
         el.setPositionForPlaceholder();
-        if (this.imageSrc) {
-          const imageSize: PixelSize = await el.loadImage(
-            this.imageSrc,
-            this.config.loadImageTimeout
-          );
-          if (imageSize.width > 0 && imageSize.height > 0) {
-            this.onImageLoaded(imageSize);
-          }
-        }
+        const imageSize: PixelSize = await el.loadImage(
+          this.imageSrc,
+          this.config.loadImageTimeout
+        );
+        this.onImageLoaded(imageSize);
       } else {
-        if (this.imageSrc) {
-          const imageSize: PixelSize = await el.loadImage(
-            this.imageSrc,
-            this.config.loadImageTimeout
-          );
-          this.onImageLoaded(imageSize);
-        }
+        // Load image and try rendering.
+        const imageSize: PixelSize = await el.loadImage(
+          this.imageSrc,
+          this.config.loadImageTimeout
+        );
+        this.onImageLoaded(imageSize);
       }
     } else if (tag === "IMG") {
+      // If image is loaded, then try rendering.
       const el = this.host as HTMLImageElement;
-      this.host.addEventListener("load", () => {
+      if (el.complete) {
         this.onImageLoaded({
           width: el.naturalWidth,
           height: el.naturalHeight,
         });
-      });
-    } else {
-      let imageSrc = this.imageSrc || this._getBackgroundImage(this.host);
-      if (imageSrc) {
-        this.host.style.backgroundImage = `url(${this.imageSrc})`;
       } else {
-        // TODO missing both data-auto-img-src and background-image for the element
+        // If image is still loading or hasn't been loaded, restart loading
+        // and try rendering later.
+        this.host.addEventListener("load", () => {
+          this.onImageLoaded({
+            width: el.naturalWidth,
+            height: el.naturalHeight,
+          });
+        });
+
+        el.src = this.imageSrc!;
+      }
+    } else {
+      // There are native ways to know if background-image of a native element
+      // is loaded or not, so we only rely on `this.isImageLoaded`. And
+      // always reload if the image is not loaded.
+      const img = new Image();
+
+      // Override the background image property.
+      this.host.style.backgroundImage = `url("${this.imageSrc}")`;
+
+      // Try rendering when image loaded, or stop when timeout.
+      Promise.race<PixelSize>([
+        new Promise((resolve) => {
+          img.addEventListener("load", () => {
+            resolve({
+              width: img.naturalWidth,
+              height: img.naturalHeight,
+            });
+          });
+        }),
+        new Promise((resolve) => {
+          setTimeout(
+            () => resolve({ width: 0, height: 0 }),
+            this.config.loadImageTimeout
+          );
+        }),
+      ]).then(this.onImageLoaded);
+
+      img.src = this.imageSrc;
+    }
+  }
+
+  /**
+   * On image loaded, try rendering, here rendering actually mean positioning.
+   */
+  onImageLoaded(imageSize: PixelSize) {
+    if (imageSize.width > 0 && imageSize.height > 0) {
+      this.centralizerInput.imageWidth = imageSize.width;
+      this.centralizerInput.imageHeight = imageSize.height;
+      this.isImageLoaded = true;
+      this.loadedImages.set(this.imageSrc!, imageSize);
+      if (!this.defer && !this.config.defer) {
+        this.render();
       }
     }
   }
 
-  onImageLoaded(imageSize: PixelSize) {
-    this.centralizerInput.imageWidth = imageSize.width;
-    this.centralizerInput.imageHeight = imageSize.height;
-    this.isImageLoaded = true;
-    if (!this.defer && !this.config.defer) {
-      this.render();
-    }
-  }
-
   onSizeSteady(containerSize: PixelSize) {
-    this.isSizeSteady = true;
-    this.centralizerInput.viewHeight = containerSize.height;
-    this.centralizerInput.viewWidth = containerSize.width;
-    if (!this.defer && !this.config.defer) {
-      this.render();
+    if (containerSize.width > 0 && containerSize.height > 0) {
+      this.isSizeSteady = true;
+      this.centralizerInput.viewHeight = containerSize.height;
+      this.centralizerInput.viewWidth = containerSize.width;
+      if (!this.defer && !this.config.defer) {
+        this.render();
+      }
     }
   }
 

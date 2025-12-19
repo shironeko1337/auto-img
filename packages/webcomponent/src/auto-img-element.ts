@@ -134,31 +134,61 @@ export class AutoImgElement extends HTMLElement {
    * Load image by src.
    */
   async loadImage(src: string, timeout: any): Promise<PixelSize> {
+    console.log("loadImage called with src:", src);
+    console.log("isImageLoaded:", this.isImageLoaded(src));
+
     if (this.isImageLoaded(src)) {
+      console.log("Image already loaded, returning early");
       const loadedImg = this.loadingImg || this.img;
       return Promise.resolve({
         width: loadedImg.naturalWidth,
         height: loadedImg.naturalHeight,
       });
     } else {
+      console.log("Creating new loadingImg");
       // Create a hidden image for loading, and present once loaded.
       this.loadingImg = document.createElement("img");
       this.loadingImg.style.position = "absolute";
       this.loadingImg.style.display = "none";
       this.shadowRoot.appendChild(this.loadingImg);
 
-      this.loadingImg.src = src;
       return await Promise.race<PixelSize>([
-        new Promise((resolve) => {
-          this.loadingImg!.addEventListener("load", () => {
+        new Promise((resolve, reject) => {
+          this.loadingImg!.onload = () => {
+            console.log("Image loaded via onload");
             resolve({
               width: this.loadingImg!.naturalWidth,
               height: this.loadingImg!.naturalHeight,
             });
-          });
+          };
+
+          this.loadingImg!.onerror = (error) => {
+            console.log("Image failed to load:", error);
+            reject(new Error(`Failed to load image: ${src}`));
+          };
+
+          console.log("Setting src:", src);
+          this.loadingImg!.src = src;
+
+          // Check if image loaded synchronously from cache
+          if (this.loadingImg!.complete) {
+            console.log("Image already complete (from cache), naturalWidth:", this.loadingImg!.naturalWidth);
+            if (this.loadingImg!.naturalWidth > 0) {
+              resolve({
+                width: this.loadingImg!.naturalWidth,
+                height: this.loadingImg!.naturalHeight,
+              });
+            } else {
+              console.log("Image complete but failed to load (naturalWidth = 0)");
+              reject(new Error(`Failed to load image: ${src}`));
+            }
+          }
         }),
         new Promise((resolve) => {
-          setTimeout(() => resolve({ width: 0, height: 0 }), timeout);
+          setTimeout(() => {
+            console.log("Image load timeout reached");
+            resolve({ width: 0, height: 0 });
+          }, timeout);
         }),
       ]);
     }
