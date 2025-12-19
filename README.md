@@ -76,6 +76,7 @@ Properties that doesn't exist:
 - [ ] Separate the api out, so that when importing the library
   - if user only wants webcomponent / react component / vue component, use `<script src=".../webcomponent.js"` or `import AutoImg from '@auto-img/react'`
   - if user only wants render API, use `<script src=".../api.js"` or `import AutoImgAPI from '@auto-img/api'`.
+- [ ] Implement another version of demos using native HTML elements (basically copy the webcomponent demo)
 - [ ] Vue adapter.
 - [ ] Tests for Vue adapter.
 - [ ] In demo page, add a demo for vue component.
