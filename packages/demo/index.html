@@ -42,7 +42,7 @@
              id="webcomponent-showcaseitems">
           <div><a href="#webcomponent-imagewithfixedsize">Image with fixed size</a></div>
           <div><a href="#webcomponent-imagefilledincontainer">Image filled in container</a></div>
-          <div><a href="#webcomponent-imagestayingfocused">Image staying focused when resizing</a>
+          <div><a href="#webcomponent-imagestayingfocused">Image auto resize</a>
           </div>
           <div><a href="#webcomponent-lazyloadedimage">Lazy loaded image</a></div>
           <div><a href="#webcomponent-slowlyloadedimage">Slowly loaded image</a></div>
@@ -58,7 +58,7 @@
         <div class="no-hover-lift hover-lift-container controlled flex-col gap-4 pl-4"
              id="api-showcaseitems">
           <div><a href="#api-imagefilledincontainer">Background image filled in container</a></div>
-          <div><a href="#api-imagestayingfocused">Background image staying focused when resizing</a></div>
+          <div><a href="#api-imagestayingfocused">Background image auto resize</a></div>
         </div>
 
         <div class="menu-item-after-list"><a href="playground.html">Playground</a></div>
@@ -163,7 +163,7 @@
         <div class="fx-bc gap-20 w-full"
              id="webcomponent-imagestayingfocused">
           <div class="fxc-ss max-w-[70vmin] gap-4">
-            <div class="title font-medium">Image staying focused when resizing</div>
+            <div class="title font-medium">Image auto resize</div>
             <div class="desc">Example usage in a responsive container with
               <p>height of <input class="text-end w-[100px] bordered"
                        type="number"
@@ -326,7 +326,7 @@
         <div class="fx-bc gap-20 w-full"
              id="api-imagestayingfocused">
           <div class="fxc-ss max-w-[70vmin] gap-4">
-            <div class="title font-medium">Background image staying focused when resizing</div>
+            <div class="title font-medium">Background image auto resize</div>
             <div class="desc">Example usage in a responsive container with
               <p>height of <input class="text-end w-[100px] bordered"
                        type="number"
@@ -427,7 +427,7 @@
     }
 
     #api-showcaseitems.controlled-opened {
-      height: 6rem;
+      height: 5.5rem;
     }
 
     .reversed {
@@ -443,7 +443,7 @@
     }
 
     .controlled:not(.controlled-opened)~.menu-item-after-list {
-      margin-top: -1.5rem;
+      margin-top: -1.2rem;
     }
 
     .menu {
