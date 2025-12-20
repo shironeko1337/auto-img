@@ -346,7 +346,11 @@ export class AutoImgModel {
       await centralizer.transform(allowDistortion, { ...input.config });
       this.showCentralizedImage(centralizer.getPosition());
     } else {
-      // TODO error handling
+      errors.forEach(error=>
+        console.warn(
+        `[AutoImg] ${error}`,
+        )
+      )
     }
   }
 

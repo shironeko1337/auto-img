@@ -49,26 +49,27 @@ export class AutoImgElement extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
 
-    this.style.position = "relative";
-    this.style.overflow = "hidden";
-    this.style.display = "block";
-
     this.img = document.createElement("img");
     this.img.style.position = "absolute";
     this.img.style.display = "block";
     this.img.style.userSelect = "none";
-    this._applyDimension({
-      width: this.getAttribute("width"),
-      height: this.getAttribute("height"),
-    });
-
     this.img.setAttribute("part", "image");
-    this._applyAttributes();
 
     this.shadowRoot.appendChild(this.img);
   }
 
   connectedCallback() {
+    this.style.position = "relative";
+    this.style.overflow = "hidden";
+    this.style.display = "block";
+
+    // Apply initial dimensions and attributes after element is connected
+    this._applyDimension({
+      width: this.getAttribute("width"),
+      height: this.getAttribute("height"),
+    });
+    this._applyAttributes();
+
     if (!this.model && autoImgAPI) {
       autoImgAPI.load(this);
     } else if (this.model?.readAttrs()) {

@@ -78,13 +78,14 @@ Properties that doesn't exist:
   - if user only wants render API, use `<script src=".../api.js"` or `import AutoImgAPI from '@auto-img/api'`.
 - [x] Implement another version of demos using native HTML elements (basically copy the webcomponent demo)
   - [ ] Add 2 unit tests for loading native HTML elements.
-- [ ] Vue adapter.
-- [ ] Tests for Vue adapter.
-- [ ] In demo page, add a demo for vue component.
-- [ ] React adapter.
-- [ ] Tests for React adapter.
+- [x] Vue adapter.
+- [x] Tests for Vue adapter.
+- [x] In demo page, add a demo for vue component.
+- [x] React adapter.
+- [x] Tests for React adapter.
   - [ ] Passes prop correctly to webcomponent.
   - [ ] Users can call web component functions by using a ref.
+- [ ] Review the vibe coded demos and unit tests react and vue
 - [ ] In demo page, add a demo for react component.
 - [ ] Setup CICD pipeline.
 - [ ] Upload npm packages
