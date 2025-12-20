@@ -1,15 +1,16 @@
 /**
  * Definition and functions specific to <auto-img/> element.
  */
-import { ImagePosition } from "autoimg-core";
 import {
+  ImagePosition,
   AutoImgModel,
-  getDimensionValue,
-  CommonHostAttrs,
   PixelSize,
-  getReversePctNumber,
-} from "./base";
-import type { AutoImgAPI } from "./auto-img-api";
+  _getReversePctNumber as getReversePctNumber,
+  _getDimensionValue as getDimensionValue,
+  _CommonHostAttrs as CommonHostAttrs,
+} from "autoimg-core";
+
+import { autoImgAPI } from "autoimg-core/api";
 
 const IMG_ATTR_PREFIX = "img-";
 /**
@@ -31,13 +32,6 @@ const AutoImgElementAttrs = ATTRS_FOR_RENDER.concat(
 );
 
 type PenetratableImgAttrs = keyof typeof IMG_ATTRIBUTE_DEFAULTS;
-
-// Global API reference set by auto-img-element.define.ts
-let _autoImgAPI: AutoImgAPI | null = null;
-
-export function setAutoImgAPI(api: AutoImgAPI) {
-  _autoImgAPI = api;
-}
 
 export class AutoImgElement extends HTMLElement {
   model?: AutoImgModel;
@@ -75,8 +69,8 @@ export class AutoImgElement extends HTMLElement {
   }
 
   connectedCallback() {
-    if (!this.model && _autoImgAPI) {
-      _autoImgAPI.load(this);
+    if (!this.model && autoImgAPI) {
+      autoImgAPI.load(this);
     } else if (this.model?.readAttrs()) {
       this.model.loadAndRender();
     }

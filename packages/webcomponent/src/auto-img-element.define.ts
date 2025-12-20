@@ -1,18 +1,13 @@
-import { AutoImgElement, setAutoImgAPI } from "./auto-img-element";
-// Here we don't need the class for a singleton.
-import { autoImgAPI as AutoImgAPI } from "./auto-img-api";
-
-// Set the global API reference so elements can auto-attach models
-setAutoImgAPI(AutoImgAPI);
+import { AutoImgElement } from "./auto-img-element";
+import { AutoImgAPI } from "autoimg-core/api";
 
 // Auto-register the custom element
 if (!customElements.get("auto-img")) {
   customElements.define("auto-img", AutoImgElement);
 }
 
-// Expose to window object for global access
+// Expose custom element to global namespace on browser
 if (typeof window !== "undefined") {
-  (window as any).AutoImgAPI = AutoImgAPI;
   (window as any).AutoImgElement = AutoImgElement;
 }
 
@@ -52,7 +47,7 @@ type JSXBase = JSX.IntrinsicElements extends { span: unknown }
 
 declare global {
   interface Window {
-    AutoImgAPI: typeof AutoImgAPI;
+    AutoImgAPI: AutoImgAPI;
     AutoImgElement: typeof AutoImgElement;
   }
 
@@ -70,4 +65,3 @@ declare global {
 }
 
 export { AutoImgElement };
-export { AutoImgAPI };

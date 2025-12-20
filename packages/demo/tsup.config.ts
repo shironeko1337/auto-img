@@ -3,12 +3,23 @@ import { defineConfig } from "tsup";
 export default defineConfig([
   {
     entry: {
-      "auto-img-element.define": "./index.ts",
+      "index.webcomponent": "./index.webcomponent.ts",
     },
     format: ["iife"],
-    globalName: "AutoImg",
     outDir: "dist",
-    outExtension: () => ({ js: ".global.js" }),
+    outExtension: () => ({ js: ".bundle.js" }),
+    platform: "browser",
+    minify: false,
+    clean: true,
+  },
+  {
+    entry: {
+      "index.api": "./index.api.ts",
+    },
+    format: ["iife"],
+    outDir: "dist",
+    outExtension: () => ({ js: ".bundle.js" }),
+    platform: "browser",
     minify: false,
     clean: true,
   },

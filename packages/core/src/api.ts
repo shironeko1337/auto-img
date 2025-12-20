@@ -1,4 +1,4 @@
-import { AutoImgModel } from "./base";
+import { AutoImgModel } from "./model";
 
 export interface AutoImgConfig {
   imageServer?: string;

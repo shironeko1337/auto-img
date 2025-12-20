@@ -3,156 +3,25 @@
  * 2. Utility functions.
  */
 import {
-  AutoImgInput,
   Point,
   Rect,
-  inputValidation,
   Image as AutoImage,
-  TouchAndRecenterCentralizer,
   ImagePosition,
-} from "autoimg-core";
-import { AutoImgElement } from "./auto-img-element";
-import { AutoImgAPI, AutoImgConfig } from "./auto-img-api";
+  PixelSize,
+  MutableState,
+} from "./base";
 
-export type PixelSize = { width: number; height: number };
+import {
+  AutoImgInput,
+  inputValidation,
+  TouchAndRecenterCentralizer,
+} from "./centralizer";
+import { AutoImgAPI, AutoImgConfig } from "./api";
 
-/**
- * A state with throttle mechanism and a stable handler setter to emit
- * when it's stable.
- */
-export class MutableState<T> {
-  static DEFAULT_TIME_BEFORE_STABLE = 300;
-  initialized = false;
-  isStable = true;
-  private onStable?: Function;
-  private onResize?: Function;
-  private value?: T;
-  private lastChangeTs: any = -1;
-  constructor(
-    private timeUntilStable = MutableState.DEFAULT_TIME_BEFORE_STABLE
-  ) {}
+import { camelToDash, getTruthyAttrValue } from "./util";
 
-  set(value: T) {
-    this.initialized = true;
-    this.value = value;
-    if (this.onResize) this.onResize(this.stableValue);
-    if (this.lastChangeTs != -1) {
-      clearTimeout(this.lastChangeTs);
-    }
-    this.lastChangeTs = setTimeout(() => {
-      this.setStable();
-      if (this.onStable) this.onStable(this.stableValue);
-    }, this.timeUntilStable);
-  }
+import { CommonHostAttrs } from "./constants";
 
-  setOnResizeStable(onStable?: Function) {
-    this.onStable = onStable;
-  }
-  setOnResize(onResize?: Function) {
-    this.onResize = onResize;
-  }
-  private setStable() {
-    this.isStable = true;
-  }
-
-  get stableValue() {
-    return this.initialized && this.isStable ? this.value : null;
-  }
-}
-
-/**
- * Host attributes that are comon to native elements and auto-img elements.
- */
-export const CommonHostAttrs = [
-  "focus",
-  "focusCenter",
-  "focus.tl",
-  "focus.tl.x",
-  "focus.tl.y",
-  "focus.br",
-  "focus.br.x",
-  "focus.br.y",
-
-  "defer",
-  "allowDistortion",
-  "padding",
-  // placeholder should belong to model, however, since rendering can't be controlled
-  // for native element, it's only effective for auto-img elements.
-  "placeholder",
-];
-
-function isDimensionValue(value: string) {
-  if (typeof value !== "string") return false;
-
-  // List of CSS length units
-  const units = [
-    "px",
-    "em",
-    "rem",
-    "vw",
-    "vh",
-    "vmin",
-    "vmax",
-    "cm",
-    "mm",
-    "in",
-    "pt",
-    "pc",
-    "q",
-    "%",
-  ];
-
-  // Build a regex: optional sign, number (int or decimal), optional unit
-  const unitPattern = units.join("|");
-  const regex = new RegExp(`^[-+]?\\d*\\.?\\d+(?:${unitPattern})?$`, "i");
-
-  return regex.test(value.trim());
-}
-
-/**
- * Return a dimension string in px if it's a numeric value, otherwise return the original value.
- */
-export function getDimensionValue(attrValue: string | number | null): string {
-  attrValue = `${attrValue}`;
-  const trimmed = attrValue.trim();
-
-  // Check if it's just a number without units
-  const numVal = parseFloat(trimmed);
-  if (!Number.isNaN(numVal) && trimmed === numVal.toString()) {
-    return numVal + "px";
-  }
-
-  // Otherwise, check if it's a valid dimension with units
-  if (isDimensionValue(trimmed)) {
-    return trimmed;
-  }
-
-  return "";
-}
-
-/**
- * HTML attruibutes defined might have "false" as value and it should be equivalent to undefined or null,
- * otherwise. it's true, including empty string,.
- */
-function getTruthyAttrValue(attrValue: string | null | undefined): boolean {
-  return attrValue === undefined || attrValue === null || attrValue === "false"
-    ? false
-    : true;
-}
-
-function camelToDash(str: string): string {
-  return str
-    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
-    .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
-    .toLowerCase();
-}
-
-/**
- * -5.1% to 5.1%
- */
-export function getReversePctNumber(value: string) {
-  return `${-Number(value.replace(/[^\d\-\.]/g, ""))}%`;
-}
 
 function getFocusCenter(input: any) {
   let x = input["focusCenter.x"],
@@ -267,7 +136,7 @@ export class AutoImgModel {
     this.loadedImages = new Map();
 
     if (this.isAutoImg()) {
-      (this.host as AutoImgElement).model = this;
+      (this.host as any).model = this;
     }
   }
 
@@ -333,31 +202,22 @@ export class AutoImgModel {
   async loadAndRender() {
     const tag = this.host.tagName;
 
-      // If there isn't a valid image src, skip loading.
-      if (!this.imageSrc) return;
+    // If there isn't a valid image src, skip loading.
+    if (!this.imageSrc) return;
 
-      // If the image is already loaded, then try rendering
-      if(this.isImageLoaded){
-        const dimensions = this.loadedImages.get(this.imageSrc);
-        if(dimensions){
-          this.onImageLoaded(dimensions)
-          return;
-        } else {
-          // Why loaded flag is flipped, but we don't get dimension data?
-        }
+    // If the image is already loaded, then try rendering
+    if (this.isImageLoaded) {
+      const dimensions = this.loadedImages.get(this.imageSrc);
+      if (dimensions) {
+        this.onImageLoaded(dimensions);
+        return;
+      } else {
+        // Why loaded flag is flipped, but we don't get dimension data?
       }
+    }
 
     if (tag === "AUTO-IMG") {
-      const el = this.host as AutoImgElement;
-
-      // If model already has valid image dimensions, skip loading
-      // if (
-      //   this.isImageLoaded &&
-      //   this.centralizerInput.imageWidth &&
-      //   this.centralizerInput.imageHeight
-      // ) {
-      //   return;
-      // }
+      const el = this.host as any;
 
       if (this.placeholder) {
         // If placeholder is present, load placeholder, show it immediately,
@@ -496,7 +356,7 @@ export class AutoImgModel {
    */
   showCentralizedImage(position: ImagePosition) {
     if (this.isAutoImg()) {
-      const autoImgEl = this.host as AutoImgElement;
+      const autoImgEl = this.host as any;
       autoImgEl.showLoadedImage();
       autoImgEl.setPosition(position);
     } else {
@@ -530,8 +390,8 @@ export class AutoImgModel {
         [imageHeight - y, (imageHeight - y) * ratio <= xDistance],
         [x / ratio, x / ratio <= yDistance],
       ]
-        .filter(([scale, condition]) => condition)
-        .map(([scale, condition]) => scale)
+        .filter(([_, condition]) => condition)
+        .map(([scale, _]) => scale)
         .sort((a, b) => (a < b ? 1 : -1));
       if (sortedScales.length) {
         const scale = sortedScales[0];
@@ -540,6 +400,8 @@ export class AutoImgModel {
           new Point(x - scale * ratio, y - scale),
           new Point(x + scale * ratio, y + scale)
         );
+      } else {
+        return new Rect(new Point(0, 0), new Point(imageWidth, imageHeight));
       }
     } else {
       return input.focus?.copy();

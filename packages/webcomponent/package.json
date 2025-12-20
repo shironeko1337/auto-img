@@ -10,11 +10,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    },
-    "./define": {
-      "types": "./dist/auto-img-element.define.d.ts",
-      "import": "./dist/auto-img-element.define.js",
-      "require": "./dist/auto-img-element.define.cjs"
     }
   },
   "customElements": "custom-elements.json",
@@ -23,11 +18,11 @@
     "custom-elements.json"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --global-name AutoImg",
-    "dev": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --global-name AutoImg --watch",
-    "build:demo": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --global-name AutoImg",
+    "build": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts",
+    "dev": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --watch",
+    "build:demo": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts",
     "demo": "npm run build:demo && npx serve .",
-    "demo:watch": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --global-name AutoImg --watch",
+    "demo:watch": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --watch",
     "test": "vitest run",
     "test:watch": "vitest"
   },

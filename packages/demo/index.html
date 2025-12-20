@@ -391,7 +391,8 @@
   <script
           src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
   <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-  <script src="/dist/auto-img-element.define.global.js"></script>
+  <script src="/dist/index.webcomponent.bundle.js"></script>
+  <script src="/dist/index.api.bundle.js"></script>
   <style>
     ul {
       list-style: unset;
@@ -502,7 +503,6 @@
       toggleMenuEl.style.position = 'fixed';
       toggleMenuEl.style.top = top + 'px';
       toggleMenuLeft = toggleMenuEl.style.left = left + 'px';
-      console.log(left, top);
       document.body.appendChild(toggleMenuEl)
 
       toggleMenuEl.addEventListener('click', () => {

@@ -10,17 +10,24 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./api": {
+      "types": "./dist/index.api.d.ts",
+      "import": "./dist/index.api.js",
+      "require": "./dist/index.api.cjs"
     }
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/index.api.js",
+    "./dist/index.api.cjs"
+  ],
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "build:watch": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts src/index.api.ts --format esm,cjs --dts",
+    "build:watch": "tsup src/index.ts src/index.api.ts --format esm,cjs --dts --watch",
     "visualize:build": "tsup --config tsup.visualize.config.ts",
-    "visualize": "npm run visualize:build && start visualizer.html",
     "visualize:roi": "npm run visualize:build && start visualizer_roi.html",
     "visualize:upscale": "npm run visualize:build && start visualizer_upscale.html",
     "test": "vitest run",

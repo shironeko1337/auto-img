@@ -73,7 +73,7 @@ Properties that doesn't exist:
 - [x] Examine unit tests
   - [x] Implement attrValidation and add unit test
   - [x] Add unit tests for placeholder and defer rendering for auto-img element
-- [ ] Separate the api out, so that when importing the library
+- [x] Separate the api out, so that when importing the library
   - if user only wants webcomponent / react component / vue component, use `<script src=".../webcomponent.js"` or `import AutoImg from '@auto-img/react'`
   - if user only wants render API, use `<script src=".../api.js"` or `import AutoImgAPI from '@auto-img/api'`.
 - [x] Implement another version of demos using native HTML elements (basically copy the webcomponent demo)

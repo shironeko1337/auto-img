@@ -1,17 +1,6 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig([
-  // visualize.ts
-  {
-    entry: ['src/visualize.ts'],
-    format: ['iife'],
-    outDir: 'dist',
-    outExtension: () => ({ js: '.bundle.js' }),
-    platform: 'browser',
-    target: 'es2020',
-    minify: false,
-    dts: false,
-  },
   // visualize_roi.ts (with special define)
   {
     entry: ['src/visualize_roi.ts'],

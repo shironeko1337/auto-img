@@ -1,4 +1,48 @@
 /**
+ * A state with throttle mechanism and a stable handler setter to emit
+ * when it's stable.
+ */
+export class MutableState<T> {
+  static DEFAULT_TIME_BEFORE_STABLE = 300;
+  initialized = false;
+  isStable = true;
+  private onStable?: Function;
+  private onResize?: Function;
+  private value?: T;
+  private lastChangeTs: any = -1;
+  constructor(
+    private timeUntilStable = MutableState.DEFAULT_TIME_BEFORE_STABLE
+  ) {}
+
+  set(value: T) {
+    this.initialized = true;
+    this.value = value;
+    if (this.onResize) this.onResize(this.stableValue);
+    if (this.lastChangeTs != -1) {
+      clearTimeout(this.lastChangeTs);
+    }
+    this.lastChangeTs = setTimeout(() => {
+      this.setStable();
+      if (this.onStable) this.onStable(this.stableValue);
+    }, this.timeUntilStable);
+  }
+
+  setOnResizeStable(onStable?: Function) {
+    this.onStable = onStable;
+  }
+  setOnResize(onResize?: Function) {
+    this.onResize = onResize;
+  }
+  private setStable() {
+    this.isStable = true;
+  }
+
+  get stableValue() {
+    return this.initialized && this.isStable ? this.value : null;
+  }
+}
+
+/**
  * Coordinates, top left is 0,0, bottom right is +x, +y
  */
 export class Point {
@@ -194,3 +238,8 @@ function getPointAt(p1: Point, p2: Point, scaleX: number, scaleY?: number) {
     (p2.y - p1.y) * scaleY + p1.y
   );
 }
+
+/**
+ * Dimensions defined by width and height in pixels.
+ */
+export type PixelSize = { width: number; height: number };

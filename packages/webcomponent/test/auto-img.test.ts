@@ -1,9 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import "../src/index";
-import { AutoImgAPI } from "../src/auto-img-api";
 import { AutoImgElement } from "../src/auto-img-element";
-import { getDimensionValue, MutableState } from "../src/base";
 import { flush } from "./setup";
+import {
+  MutableState,
+  _getDimensionValue as getDimensionValue,
+} from "autoimg-core";
+import { AutoImgAPI } from "autoimg-core/api";
 
 const EXAMPLE_IMAGE_URL = "https://example.com/image.jpg";
 const EXAMPLE_PLACEHOLDER_URL =
