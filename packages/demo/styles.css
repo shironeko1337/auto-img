@@ -180,6 +180,13 @@
     @apply relative flex justify-center items-center whitespace-nowrap cursor-pointer border-none font-bold;
   }
 
+  .btn,
+  .btn.btn-base {
+    @apply rounded-md;
+    padding: 1vh 2vh;
+    font-size: 1.5vh;
+    letter-spacing: normal;
+  }
   .btn.btn-md {
     @apply rounded-md;
     padding: 1.75vh 3.5vh;
@@ -211,7 +218,6 @@
 
 @layer utilities {
   .title {
-    font-family: var(--font-headline);
     @apply text-4xl;
     color: var(--color-headline);
   }
@@ -276,7 +282,8 @@ svg path {
   stroke: var(--color-stroke);
 }
 
-.desc, p {
+.desc,
+p {
   color: var(--color-paragraph);
 }
 
@@ -298,5 +305,6 @@ svg path {
 }
 
 .bordered {
-  border: 2px solid var(--color-paragraph); box-sizing: border-box;
+  border: 2px solid var(--color-paragraph);
+  box-sizing: border-box;
 }
