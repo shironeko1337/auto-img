@@ -1,21 +1,21 @@
-# AutoImg
-- Position images automatically while first loading and resizing.
-- Webcomponent, react component, vue component, pure API available to use.
-- A playground to for core positioning algorithm.
-- Baseline [Compatibility](https://developer.mozilla.org/en-US/docs/Glossary/Baseline/Compatibility).
+# 📸 AutoImg
+- 🎯 Position images automatically while first loading and resizing.
+- ⚙️ Webcomponent, react component, vue component, pure API available to use.
+- 🎮 A playground to for core positioning algorithm.
+- ✅ Baseline [Compatibility](https://developer.mozilla.org/en-US/docs/Glossary/Baseline/Compatibility).
 
-### Demo
+## 🎬 Demo
 [Live demo]()
 
-**Local hosting**
+**💻 Local hosting**
 ```bash
 npm install autoimg-demo
 npx serve .
 ```
 
-### Quick start
+## 🚀 Quick start
 
-**Install Webcomponent and API**
+**📦 Install Webcomponent and API**
 
 ```bash
 npm install autoimg -D
@@ -30,7 +30,7 @@ npm install autoimg -D
   padding="10"></auto-img>
 ```
 
-**Install Only API**:
+**🔧 Install Only API**:
 ```bash
 npm install autoimg-core/api -D
 ```
@@ -48,11 +48,11 @@ npm install autoimg-core/api -D
 <script>AutoImgAPI.loadAll('[data-auto-img]');</script>
 ```
 
-**Use via CDN**
+**🌐 Use via CDN**
 <!--
 ```html
 <script type="module" src="https://unpkg.com/autoimg"></script>
 ``` -->
 
-### License
+## 📄 License
 Copyright (c) 2025, Liyi Zhang. (MIT License)
