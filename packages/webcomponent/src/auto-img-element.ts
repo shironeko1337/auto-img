@@ -72,8 +72,6 @@ export class AutoImgElement extends HTMLElement {
 
     if (!this.model && autoImgAPI) {
       autoImgAPI.load(this);
-    } else if (this.model?.readAttrs()) {
-      this.model.loadAndRender();
     }
   }
 

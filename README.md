@@ -83,13 +83,13 @@ Properties that doesn't exist:
 - [x] In demo page, add a demo for vue component.
 - [x] React adapter.
 - [x] Tests for React adapter.
-  - [ ] Passes prop correctly to webcomponent.
-  - [ ] Users can call web component functions by using a ref.
-- [ ] Review the vibe coded demos and unit tests react and vue
-- [ ] In demo page, add a demo for react component.
+  - [x] Passes prop correctly to webcomponent.
+  - [x] Users can call web component functions by using a ref.
+- [x] Review the vibe coded demos and unit tests react and vue
 - [ ] Setup CICD pipeline.
 - [ ] Upload npm packages
 - [ ] Finalize README docs.
+- [ ] In demo page, add a demo for react component from codesandbox.
 - [ ] Further optimizations, more friendly API? get faster? Different version of images based on container size? Using a self hosting website and AI to auto find focus or auto upscaling?...
 
 # Hot patches
