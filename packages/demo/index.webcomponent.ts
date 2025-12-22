@@ -1,2 +1,2 @@
 // Import webcomponent
-import "autoimg-webcomponent";
+import "autoimg";

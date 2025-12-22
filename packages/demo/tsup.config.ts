@@ -24,6 +24,17 @@ export default defineConfig([
     clean: true,
   },
   {
+    entry: {
+      index: "./index.ts",
+    },
+    format: ["iife"],
+    outDir: "dist",
+    outExtension: () => ({ js: ".bundle.js" }),
+    platform: "browser",
+    minify: false,
+    clean: true,
+  },
+  {
     entry: ["./playground.ts", "./canvas_helper.ts"],
     format: ["iife"],
     outDir: "dist",

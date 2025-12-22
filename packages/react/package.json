@@ -1,7 +1,43 @@
 {
-  "name": "autoimg-react-demo",
+  "name": "autoimg-react",
   "version": "0.1.0",
+  "description": "React component wrapper for AutoImg - content-aware image resizing",
+  "author": "Liyi Zhang",
+  "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shironeko1337/auto-img.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/shironeko1337/auto-img",
+  "bugs": {
+    "url": "https://github.com/shironeko1337/auto-img/issues"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "image",
+    "responsive",
+    "focus",
+    "crop",
+    "auto-img",
+    "content-aware",
+    "react-component"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -12,7 +48,7 @@
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "autoimg-webcomponent": "*"
+    "autoimg": "*"
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",

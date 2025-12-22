@@ -101,7 +101,11 @@ export class AutoImgElement extends HTMLElement {
   disconnectedCallback() {}
 
   /**
-   * If image is loaded, if there are image loading, it's the loading state of that
+   * Returns if image is loaded.
+   *
+   * @param src Image src.
+   *
+   * If there are image loading, it's the loading state of that
    * image, otherwise it's loaded as long as img src equals to given src.
    */
   isImageLoaded(src?: string) {
@@ -125,7 +129,10 @@ export class AutoImgElement extends HTMLElement {
   }
 
   /**
-   * Load image by src.
+   * Start loading image by src.
+   *
+   * @param src Image src string.
+   * @param timeout Load timeout.
    */
   async loadImage(src: string, timeout: any): Promise<PixelSize> {
     if (this.isImageLoaded(src)) {
@@ -178,6 +185,11 @@ export class AutoImgElement extends HTMLElement {
   /**
    * Set position for img element, equivalent to setting the background-position
    * and background-size for a native element.
+   *
+   * @param position CSS position for setting a background image, see
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/background-position
+   * and
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/background-size.
    */
   setPosition(position: ImagePosition) {
     const [width, height] = position.backgroundSize.split(" ");
@@ -191,6 +203,10 @@ export class AutoImgElement extends HTMLElement {
     ${getReversePctNumber(top)})`;
   }
 
+  /**
+   * Set position for placeholder, keep it in the center of image container
+   * without stretching.
+   */
   setPositionForPlaceholder() {
     this.img.style.width = "100%";
     this.img.style.height = "100%";

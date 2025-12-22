@@ -1,10 +1,32 @@
 {
   "name": "autoimg-core",
   "version": "0.1.0",
+  "description": "Core library for resizing and shifting images to keep content focused",
+  "author": "Liyi Zhang",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shironeko1337/auto-img.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/shironeko1337/auto-img",
+  "bugs": {
+    "url": "https://github.com/shironeko1337/auto-img/issues"
+  },
+  "keywords": [
+    "image",
+    "responsive",
+    "focus",
+    "crop",
+    "resize",
+    "background-image",
+    "content-aware",
+    "image-processing"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

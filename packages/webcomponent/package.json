@@ -1,10 +1,32 @@
 {
-  "name": "autoimg-webcomponent",
+  "name": "autoimg",
   "version": "0.1.0",
+  "description": "Web component for content-aware image resizing and focusing",
+  "author": "Liyi Zhang",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shironeko1337/auto-img.git",
+    "directory": "packages/webcomponent"
+  },
+  "homepage": "https://github.com/shironeko1337/auto-img",
+  "bugs": {
+    "url": "https://github.com/shironeko1337/auto-img/issues"
+  },
+  "keywords": [
+    "web-component",
+    "custom-element",
+    "image",
+    "responsive",
+    "focus",
+    "crop",
+    "auto-img",
+    "content-aware"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

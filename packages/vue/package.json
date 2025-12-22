@@ -1,7 +1,43 @@
 {
-  "name": "autoimg-vue-demo",
+  "name": "autoimg-vue",
   "version": "0.1.0",
+  "description": "Vue component wrapper for AutoImg - content-aware image resizing",
+  "author": "Liyi Zhang",
+  "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shironeko1337/auto-img.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/shironeko1337/auto-img",
+  "bugs": {
+    "url": "https://github.com/shironeko1337/auto-img/issues"
+  },
+  "keywords": [
+    "vue",
+    "component",
+    "image",
+    "responsive",
+    "focus",
+    "crop",
+    "auto-img",
+    "content-aware",
+    "vue-component"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
@@ -11,7 +47,7 @@
   },
   "dependencies": {
     "vue": "^3.5.13",
-    "autoimg-webcomponent": "*"
+    "autoimg": "*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

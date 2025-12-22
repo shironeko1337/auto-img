@@ -1,5 +1,5 @@
 import { AutoImgElement } from "./auto-img-element";
-import { AutoImgAPI } from "autoimg-core/api";
+import { AutoImgAPI, autoImgAPI } from "autoimg-core/api";
 
 // Auto-register the custom element
 if (!customElements.get("auto-img")) {
@@ -9,6 +9,7 @@ if (!customElements.get("auto-img")) {
 // Expose custom element to global namespace on browser
 if (typeof window !== "undefined") {
   (window as any).AutoImgElement = AutoImgElement;
+  (window as any).AutoImgAPI = autoImgAPI;
 }
 
 // Attributes for auto-img element
@@ -64,4 +65,4 @@ declare global {
   }
 }
 
-export { AutoImgElement };
+export { AutoImgElement, AutoImgAPI, autoImgAPI };

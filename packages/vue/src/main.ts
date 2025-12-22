@@ -3,6 +3,6 @@ import App from './App.vue'
 import './style.css'
 
 // Import and register the web component
-import 'autoimg-webcomponent'
+import 'autoimg'
 
 createApp(App).mount('#app')

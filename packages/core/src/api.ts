@@ -13,6 +13,7 @@ export interface AutoImgConfig {
  * AutoImg API for model based rendering.
  */
 export class AutoImgAPI {
+  // Default API config.
   config: AutoImgConfig = {
     resizeRerender: true,
     resizeThrottle: 300,
@@ -31,6 +32,9 @@ export class AutoImgAPI {
   private resizeObserver!: ResizeObserver;
 
   /**
+   *
+   * @param config: Initial API config that overrides default.
+   *
    * 1. Check compability.
    * 2. Initialize resize observer and mutation observer.
    * 3. Load all element on DOM ready. It can be disabled by set `defer = true`
@@ -56,6 +60,8 @@ export class AutoImgAPI {
    * When calling this method manually, we assume the user wants to load
    * `[data-auto-img]` elements instead of `<auto-img/>` elements.
    *
+   * @param selector CSS selector for matching HTML DOM elements.
+   *
    * 1. When attaching a model, API also holds a map from element to model
    *    to react to resize event.
    * 2. The model itself reads all attrs, load images and render later
@@ -77,6 +83,8 @@ export class AutoImgAPI {
 
   /**
    * Load a single html element to attach a model to it.
+   *
+   * @param element HTML DOM element reference.
    */
   load(element: HTMLElement) {
     const model = this.attachModel(element);
@@ -88,6 +96,8 @@ export class AutoImgAPI {
   /**
    * Trigger rendering of all selected elements, this function doesn't wait
    * until render completes.
+   *
+   * @param selector CSS selector for matching HTML DOM elements.
    */
   renderAll(selector = "[data-auto-img]") {
     document
@@ -98,6 +108,7 @@ export class AutoImgAPI {
   /**
    * Manually render any supported element.
    *
+   * @param element HTML DOM element reference.
    * @param waitResize: whether we wait until size is steady.
    *
    * There are two scenarios we should call render manually

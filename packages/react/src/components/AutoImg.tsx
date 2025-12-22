@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import 'autoimg-webcomponent';
+import 'autoimg';
 
 export interface AutoImgProps {
   // Core properties

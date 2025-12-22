@@ -1,10 +1,20 @@
 {
-  "name": "demo",
+  "name": "autoimg-demo",
   "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
+  "description": "Demo application for AutoImg library",
+  "author": "Liyi Zhang",
+  "license": "MIT",
+  "private": true,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shironeko1337/auto-img.git",
+    "directory": "packages/demo"
+  },
+  "homepage": "https://github.com/shironeko1337/auto-img",
+  "bugs": {
+    "url": "https://github.com/shironeko1337/auto-img/issues"
+  },
   "scripts": {
     "build:js": "tsup",
     "build:css": "tailwindcss -i ./styles.css -o ./dist/styles.css",
@@ -17,12 +27,13 @@
     "demo:watch": "npm run build:watch"
   },
   "dependencies": {
-    "autoimg-webcomponent": "*",
-    "autoimg-core": "*"
+    "autoimg-core": "*",
+    "autoimg-webcomponent": "*"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
     "live-server": "^1.2.2",
+    "marked": "^17.0.1",
     "tailwindcss": "^4.1.17"
   }
 }
