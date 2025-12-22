@@ -34,15 +34,15 @@ describe('AutoImg Component', () => {
     render(
       <AutoImg
         src="test.jpg"
-        focus="0.5,0.5"
-        focusCenter="0.3,0.4"
+        focus="50,50;100,100"
+        focusCenter="75,75"
         padding="10"
       />
     );
 
     const element = document.querySelector('auto-img');
-    expect(element?.getAttribute('focus')).toBe('0.5,0.5');
-    expect(element?.getAttribute('focus-center')).toBe('0.3,0.4');
+    expect(element?.getAttribute('focus')).toBe('50,50;100,100');
+    expect(element?.getAttribute('focus-center')).toBe('75,75');
     expect(element?.getAttribute('padding')).toBe('10');
   });
 
@@ -50,7 +50,7 @@ describe('AutoImg Component', () => {
     render(<AutoImg src="test.jpg" defer={true} allowDistortion={false} />);
 
     const element = document.querySelector('auto-img');
-    
+
     // Wait for useEffect to run
     await vi.waitFor(() => {
       expect(element?.getAttribute('defer')).toBe('true');
@@ -62,17 +62,17 @@ describe('AutoImg Component', () => {
     render(
       <AutoImg
         src="test.jpg"
-        focusTl="0.2,0.3"
-        focusBr="0.8,0.7"
+        focusTl="20,30"
+        focusBr="80,70"
       />
     );
 
     const element = document.querySelector('auto-img');
-    
+
     // Wait for useEffect to run
     await vi.waitFor(() => {
-      expect(element?.getAttribute('focus.tl')).toBe('0.2,0.3');
-      expect(element?.getAttribute('focus.br')).toBe('0.8,0.7');
+      expect(element?.getAttribute('focus.tl')).toBe('20,30');
+      expect(element?.getAttribute('focus.br')).toBe('80,70');
     });
   });
 
@@ -106,7 +106,7 @@ describe('AutoImg Component', () => {
     if (element) {
       await user.hover(element);
       expect(handleMouseEnter).toHaveBeenCalledTimes(1);
-      
+
       await user.unhover(element);
       expect(handleMouseLeave).toHaveBeenCalledTimes(1);
     }

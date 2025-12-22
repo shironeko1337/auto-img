@@ -73,21 +73,10 @@ export const AutoImg: React.FC<AutoImgProps> = (props) => {
 
   const elementRef = useRef<HTMLElement>(null);
 
-  // Set properties that can't be set via JSX attributes
+  // Set dotted properties that can't be set via JSX attributes
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
-
-    // Boolean properties
-    if (defer !== undefined) {
-      element.setAttribute('defer', String(defer));
-    }
-    if (allowDistortion !== undefined) {
-      element.setAttribute('allowDistortion', String(allowDistortion));
-    }
-    if (imgDraggable !== undefined) {
-      element.setAttribute('img-draggable', String(imgDraggable));
-    }
 
     // Dotted properties (can't be set via JSX)
     if (focusTl !== undefined) {
@@ -108,30 +97,41 @@ export const AutoImg: React.FC<AutoImgProps> = (props) => {
     if (focusBrY !== undefined) {
       element.setAttribute('focus.br.y', focusBrY);
     }
-  }, [defer, allowDistortion, imgDraggable, focusTl, focusTlX, focusTlY, focusBr, focusBrX, focusBrY]);
+  }, [focusTl, focusTlX, focusTlY, focusBr, focusBrX, focusBrY]);
 
-  return (
-    <auto-img
-      ref={elementRef as any}
-      src={src}
-      width={width}
-      height={height}
-      img-alt={imgAlt}
-      img-loading={imgLoading}
-      img-title={imgTitle}
-      img-crossOrigin={imgCrossOrigin}
-      img-decoding={imgDecoding}
-      img-fetchPriority={imgFetchPriority}
-      focus={focus}
-      focus-center={focusCenter}
+  // Build props object to pass all attributes before element is connected
+  const elementProps: any = {
+    ref: elementRef,
+    src,
+    width,
+    height,
+    'img-alt': imgAlt,
+    'img-loading': imgLoading,
+    'img-title': imgTitle,
+    'img-crossOrigin': imgCrossOrigin,
+    'img-decoding': imgDecoding,
+    'img-fetchPriority': imgFetchPriority,
+    focus,
+    'focus-center': focusCenter,
+    padding,
+    placeholder,
+    className,
+    style,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+  };
 
-      padding={padding}
-      placeholder={placeholder}
-      className={className}
-      style={style}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    />
-  );
+  // Set boolean attributes as strings so they're available before connectedCallback
+  if (defer !== undefined) {
+    elementProps.defer = String(defer);
+  }
+  if (allowDistortion !== undefined) {
+    elementProps.allowDistortion = String(allowDistortion);
+  }
+  if (imgDraggable !== undefined) {
+    elementProps['img-draggable'] = String(imgDraggable);
+  }
+
+  return <auto-img {...elementProps} />;
 };

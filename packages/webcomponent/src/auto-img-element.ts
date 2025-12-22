@@ -93,6 +93,7 @@ export class AutoImgElement extends HTMLElement {
       if (this.model) {
         // src and all other model attributes would be handled here
         if (this.model.readAttrs()) {
+          console.log('load and render', this.getAttribute('focus'));
           this.model.loadAndRender();
         }
       }

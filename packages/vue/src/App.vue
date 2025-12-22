@@ -1,21 +1,32 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
+import { autoImgAPI } from "autoimg-core/api";
+
+const loadImage = () => {
+  autoImgAPI.renderAll("auto-img,[data-auto-img]");
+};
+
 const handleClick = () => {
-  console.log('Image clicked!');
+  console.log("Image clicked!");
 };
 
 const handleMouseEnter = () => {
-  console.log('Mouse entered');
+  console.log("Mouse entered");
 };
 
 const handleMouseLeave = () => {
-  console.log('Mouse left');
+  console.log("Mouse left");
 };
+
+onMounted(() => {
+  autoImgAPI.loadAll();
+});
 </script>
 
 <template>
   <div class="app">
     <h1>AutoImg Vue Demo</h1>
-    
+
     <div class="demo-grid">
       <div class="demo-item">
         <h2>Basic Usage</h2>
@@ -46,7 +57,7 @@ const handleMouseLeave = () => {
           src="https://picsum.photos/id/1015/800/600"
           width="400px"
           height="300px"
-          placeholder="https://via.placeholder.com/400x300?text=Loading..."
+          placeholder="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RkZCIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiM5OTkiPkxvYWRpbmcuLi48L3RleHQ+PC9zdmc+"
           img-alt="Mountain landscape"
           @mouseenter="handleMouseEnter"
           @mouseleave="handleMouseLeave"
@@ -59,7 +70,7 @@ const handleMouseLeave = () => {
           src="https://picsum.photos/id/1018/1200/800"
           width="100%"
           height="300px"
-          focus="0.5,0.5"
+          focus="50,50;100,100"
           :allowDistortion="false"
           img-alt="Responsive image"
         />
@@ -71,8 +82,8 @@ const handleMouseLeave = () => {
           src="https://picsum.photos/id/180/800/600"
           width="400px"
           height="300px"
-          focus.tl="0.2,0.3"
-          focus.br="0.8,0.7"
+          focus.tl="100,100"
+          focus.br="200,200"
           padding="10"
           img-alt="Advanced focus example"
         />
@@ -80,12 +91,24 @@ const handleMouseLeave = () => {
 
       <div class="demo-item">
         <h2>Deferred Loading</h2>
+        <button class="load-btn" @click="loadImage()">Load Images</button>
         <auto-img
           src="https://picsum.photos/id/1025/800/600"
           width="400px"
           height="300px"
+          placeholder="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RkZCIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiM5OTkiPkxvYWRpbmcuLi48L3RleHQ+PC9zdmc+"
           :defer="true"
           img-alt="Deferred loading example"
+        />
+      </div>
+
+      <div class="demo-item">
+        <h2>Native element</h2>
+        <div
+          data-auto-img
+          data-auto-img-src="https://picsum.photos/id/1025/800/600"
+          style="width: 400px; height: 300px"
+          data-auto-img-defer
         />
       </div>
     </div>
@@ -134,6 +157,31 @@ h2 {
 
 .demo-item auto-img:hover {
   transform: scale(1.02);
+}
+
+.load-btn {
+  background: #42b983;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(66, 185, 131, 0.2);
+}
+
+.load-btn:hover {
+  background: #35a372;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(66, 185, 131, 0.3);
+}
+
+.load-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(66, 185, 131, 0.2);
 }
 
 @media (max-width: 768px) {

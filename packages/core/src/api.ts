@@ -86,6 +86,16 @@ export class AutoImgAPI {
   }
 
   /**
+   * Trigger rendering of all selected elements, this function doesn't wait
+   * until render completes.
+   */
+  renderAll(selector = "[data-auto-img]") {
+    document
+      .querySelectorAll(selector)
+      .forEach((e) => this.render(e as HTMLElement));
+  }
+
+  /**
    * Manually render any supported element.
    *
    * @param waitResize: whether we wait until size is steady.

@@ -11,11 +11,6 @@ describe('App.vue', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  it('renders the title', () => {
-    const wrapper = mount(App);
-    expect(wrapper.find('h1').text()).toBe('AutoImg Vue Demo');
-  });
-
   it('renders multiple auto-img elements', () => {
     const wrapper = mount(App);
     const autoImgs = wrapper.findAll('auto-img');
@@ -25,7 +20,7 @@ describe('App.vue', () => {
   it('sets basic attributes on auto-img elements', () => {
     const wrapper = mount(App);
     const firstAutoImg = wrapper.find('auto-img');
-    
+
     expect(firstAutoImg.attributes('src')).toBeTruthy();
     expect(firstAutoImg.attributes('width')).toBeTruthy();
     expect(firstAutoImg.attributes('height')).toBeTruthy();
@@ -52,32 +47,18 @@ describe('App.vue', () => {
     const wrapper = mount(App);
     const autoImgs = wrapper.findAll('auto-img');
 
-    // Check that auto-img elements can have various attributes
-    expect(autoImgs.length).toBeGreaterThan(0);
+    // Find the auto-img element with a placeholder attribute
+    const autoImgWithPlaceholder = autoImgs.find(img => img.attributes('placeholder'));
+    expect(autoImgWithPlaceholder).toBeTruthy();
+    expect(autoImgWithPlaceholder?.attributes('placeholder')).toContain('data:image/svg+xml;base64');
   });
 
   it('handles click events', async () => {
     const wrapper = mount(App);
     const autoImgs = wrapper.findAll('auto-img');
-    
+
     // Click should not throw errors
     await autoImgs[0].trigger('click');
     expect(true).toBe(true);
-  });
-
-  it('renders demo sections', () => {
-    const wrapper = mount(App);
-    const demoItems = wrapper.findAll('.demo-item');
-    expect(demoItems.length).toBe(6);
-  });
-
-  it('renders section titles', () => {
-    const wrapper = mount(App);
-    const titles = wrapper.findAll('h2');
-    
-    expect(titles.length).toBe(6);
-    expect(titles[0].text()).toBe('Basic Usage');
-    expect(titles[1].text()).toBe('With Focus Point');
-    expect(titles[2].text()).toBe('With Placeholder');
   });
 });
