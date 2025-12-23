@@ -1,5 +1,5 @@
 import { AutoImgElement } from "./auto-img-element";
-import { AutoImgAPI, autoImgAPI } from "autoimg-core/api";
+import { AutoImgAPI, autoImgAPI } from "@shironeko1052/autoimg-core/api";
 
 // Auto-register the custom element
 if (!customElements.get("auto-img")) {

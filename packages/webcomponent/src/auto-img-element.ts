@@ -8,9 +8,9 @@ import {
   _getReversePctNumber as getReversePctNumber,
   _getDimensionValue as getDimensionValue,
   _CommonHostAttrs as CommonHostAttrs,
-} from "autoimg-core";
+} from "@shironeko1052/autoimg-core";
 
-import { autoImgAPI } from "autoimg-core/api";
+import { autoImgAPI } from "@shironeko1052/autoimg-core/api";
 
 const IMG_ATTR_PREFIX = "img-";
 /**

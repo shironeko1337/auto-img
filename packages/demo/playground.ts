@@ -6,7 +6,7 @@ import {
   Centralizer,
   CentralizerClass,
   TestInput,
-} from "autoimg-core";
+} from "@shironeko1052/autoimg-core";
 import { CanvasHelper } from "./canvas_helper";
 
 // Centralized CSS styles

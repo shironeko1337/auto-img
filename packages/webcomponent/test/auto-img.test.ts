@@ -5,8 +5,8 @@ import { flush } from "./setup";
 import {
   MutableState,
   _getDimensionValue as getDimensionValue,
-} from "autoimg-core";
-import { AutoImgAPI } from "autoimg-core/api";
+} from "@shironeko1052/autoimg-core";
+import { AutoImgAPI } from "@shironeko1052/autoimg-core/api";
 
 const EXAMPLE_IMAGE_URL = "https://example.com/image.jpg";
 const EXAMPLE_PLACEHOLDER_URL =

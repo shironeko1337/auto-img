@@ -1,5 +1,5 @@
 {
-  "name": "autoimg-vue",
+  "name": "@shironeko1052/autoimg-vue",
   "version": "0.1.0",
   "description": "Vue component wrapper for AutoImg - content-aware image resizing",
   "author": "Liyi Zhang",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "vue": "^3.5.13",
-    "autoimg": "^0.1.0"
+    "@shironeko1052/autoimg": "^0.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

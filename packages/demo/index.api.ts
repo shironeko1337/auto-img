@@ -1,2 +1,2 @@
 // Import API
-import "autoimg-core/api";
+import "@shironeko1052/autoimg-core/api";

@@ -1,2 +1,2 @@
 // Import webcomponent
-import "autoimg";
+import "@shironeko1052/autoimg";

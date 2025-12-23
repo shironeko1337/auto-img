@@ -7,13 +7,13 @@ React component wrapper for AutoImg - provides a React component for content-awa
 ## Installation
 
 ```bash
-npm install autoimg-react
+npm install @shironeko1052/autoimg-react
 ```
 
 ## Usage
 
 ```tsx
-import { AutoImg } from 'autoimg-react';
+import { AutoImg } from '@shironeko1052/autoimg-react';
 
 function App() {
   return (

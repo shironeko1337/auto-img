@@ -10,14 +10,14 @@ Core library for AutoImg - provides the fundamental algorithms and models for co
 ## Installation
 
 ```bash
-npm install autoimg-core
+npm install @shironeko1052/autoimg-core
 ```
 
 ## Usage
 
 ```javascript
-import { AutoImgModel } from 'autoimg-core';
-import { autoImgAPI } from 'autoimg-core/api';
+import { AutoImgModel } from '@shironeko1052/autoimg-core';
+import { autoImgAPI } from '@shironeko1052/autoimg-core/api';
 
 // Use the API to load and render images
 autoImgAPI.loadAll('[data-auto-img]');

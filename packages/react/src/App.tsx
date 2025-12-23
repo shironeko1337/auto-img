@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { AutoImg } from './components/AutoImg';
-import { autoImgAPI } from 'autoimg-core/api';
+import { autoImgAPI } from '@shironeko1052/autoimg-core/api';
 import './App.css';
 
 function App() {

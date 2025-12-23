@@ -1,5 +1,5 @@
 {
-  "name": "autoimg",
+  "name": "@shironeko1052/autoimg",
   "version": "0.1.0",
   "description": "Web component for content-aware image resizing and focusing",
   "author": "Liyi Zhang",
@@ -61,7 +61,7 @@
     }
   },
   "dependencies": {
-    "autoimg-core": "^0.1.0"
+    "@shironeko1052/autoimg-core": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

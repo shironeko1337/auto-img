@@ -1,5 +1,5 @@
 {
-  "name": "autoimg-core",
+  "name": "@shironeko1052/autoimg-core",
   "version": "0.1.0",
   "description": "Core library for resizing and shifting images to keep content focused",
   "author": "Liyi Zhang",

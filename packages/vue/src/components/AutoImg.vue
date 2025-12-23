@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import 'autoimg';
+import '@shironeko1052/autoimg';
 
 export interface AutoImgProps {
   // Core properties

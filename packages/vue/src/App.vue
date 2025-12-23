@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { autoImgAPI } from "autoimg-core/api";
+import { autoImgAPI } from "@shironeko1052/autoimg-core/api";
 
 const loadImage = () => {
   autoImgAPI.renderAll("auto-img,[data-auto-img]");

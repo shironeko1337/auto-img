@@ -1,5 +1,5 @@
 {
-  "name": "autoimg-demo",
+  "name": "@shironeko1052/autoimg-demo",
   "version": "1.0.0",
   "description": "Demo application for AutoImg library",
   "author": "Liyi Zhang",
@@ -36,8 +36,8 @@
     "demo:watch": "npm run build:watch"
   },
   "dependencies": {
-    "autoimg-core": "^0.1.0",
-    "autoimg": "^0.1.0"
+    "@shironeko1052/autoimg-core": "^0.1.0",
+    "@shironeko1052/autoimg": "^0.1.0"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

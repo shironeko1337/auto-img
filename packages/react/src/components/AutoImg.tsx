@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import 'autoimg';
+import '@shironeko1052/autoimg';
 
 export interface AutoImgProps {
   // Core properties

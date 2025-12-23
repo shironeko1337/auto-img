@@ -7,7 +7,7 @@ Vue component wrapper for AutoImg - provides a Vue component for content-aware i
 ## Installation
 
 ```bash
-npm install autoimg-vue
+npm install @shironeko1052/autoimg-vue
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ npm install autoimg-vue
 </template>
 
 <script setup lang="ts">
-import { AutoImg } from 'autoimg-vue';
+import { AutoImg } from '@shironeko1052/autoimg-vue';
 
 const handleClick = () => {
   console.log('Clicked!');

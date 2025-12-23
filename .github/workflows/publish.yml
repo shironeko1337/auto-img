@@ -66,5 +66,3 @@ jobs:
 
           echo "Publishing autoimg-demo..."
           npm publish --workspace=packages/demo --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

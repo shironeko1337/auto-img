@@ -1,5 +1,5 @@
 {
-  "name": "autoimg-react",
+  "name": "@shironeko1052/autoimg-react",
   "version": "0.1.0",
   "description": "React component wrapper for AutoImg - content-aware image resizing",
   "author": "Liyi Zhang",
@@ -52,7 +52,7 @@
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "autoimg": "^0.1.0"
+    "@shironeko1052/autoimg": "^0.1.0"
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",
