@@ -1,4 +1,10 @@
 # 📸 AutoImg
+
+[![webcomponent bundle](https://img.shields.io/bundlephobia/minzip/@shironeko1052/autoimg?label=size%20(minified%20%2B%20gzipped))](https://bundlephobia.com/package/@shironeko1052/autoimg)
+[![api bundle](https://img.shields.io/bundlephobia/minzip/@shironeko1052/autoimg-core?label=core%2Fapi%20size&color=blue)](https://bundlephobia.com/package/@shironeko1052/autoimg-core)
+[![CI](https://github.com/shironeko1337/auto-img/actions/workflows/ci.yml/badge.svg)](https://github.com/shironeko1337/auto-img/actions/workflows/ci.yml)
+[![Snyk security](https://snyk.io/test/github/shironeko1337/auto-img/badge.svg)](https://snyk.io/test/github/shironeko1337/auto-img)
+
 - 🎯 Position images automatically while first loading and resizing.
 - ⚙️ Webcomponent, react component, vue component, pure API available to use.
 - 🎮 A playground to for core positioning algorithm.
@@ -9,7 +15,7 @@
 
 **💻 Local hosting**
 ```bash
-npm install autoimg-demo
+npm install @shironeko1052/autoimg-demo
 npx serve .
 ```
 
@@ -18,7 +24,7 @@ npx serve .
 **📦 Install Webcomponent and API**
 
 ```bash
-npm install autoimg -D
+npm install @shironeko1052/autoimg -D
 ```
 
 ```html
@@ -32,7 +38,7 @@ npm install autoimg -D
 
 **🔧 Install Only API**:
 ```bash
-npm install autoimg-core/api -D
+npm install @shironeko1052/autoimg-core/api -D
 ```
 
 ```html
@@ -49,10 +55,10 @@ npm install autoimg-core/api -D
 ```
 
 **🌐 Use via CDN**
-<!--
+
 ```html
-<script type="module" src="https://unpkg.com/autoimg"></script>
-``` -->
+  <script type="module" src="https://unpkg.com/@shironeko1052/autoimg"></script>
+```
 
 ## 📄 License
 Copyright (c) 2025, Liyi Zhang. (MIT License)

@@ -1,5 +1,7 @@
 # Autoimg Vue
 
+[![npm](https://img.shields.io/npm/v/@shironeko1052/autoimg-vue)](https://www.npmjs.com/package/@shironeko1052/autoimg-vue)
+
 ## Description
 
 Vue component wrapper for AutoImg - provides a Vue component for content-aware image resizing and focusing. This package wraps the AutoImg web component with proper Vue 3 integration, TypeScript support, and Vue-friendly props. Vue 3 has excellent native support for web components, making integration seamless.

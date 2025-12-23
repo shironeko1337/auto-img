@@ -70,7 +70,7 @@ The GitHub Action will automatically:
 ## Step 5: Verify Publication
 
 After the workflow completes:
-1. Check npm: `npm view autoimg-core`
+1. Check npm: `npm view @shironeko1052/autoimg-core`
 2. Visit package page: `https://www.npmjs.com/package/autoimg-core`
 
 ## Workflows

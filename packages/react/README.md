@@ -1,5 +1,7 @@
 # Autoimg React
 
+[![npm](https://img.shields.io/npm/v/@shironeko1052/autoimg-react)](https://www.npmjs.com/package/@shironeko1052/autoimg-react)
+
 ## Description
 
 React component wrapper for AutoImg - provides a React component for content-aware image resizing and focusing. This package wraps the AutoImg web component with proper React integration, TypeScript support, and React-friendly props.

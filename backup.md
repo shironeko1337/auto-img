@@ -87,7 +87,7 @@ Properties that doesn't exist:
   - [x] Users can call web component functions by using a ref.
 - [x] Review the vibe coded demos and unit tests react and vue
 - [x] Finalize README docs.
-- [ ] Setup CICD pipeline.
+- [x] Setup CICD pipeline.
 - [ ] Upload npm packages and enable CDN usage.
 - [ ] Setup an online demo.
 - [ ] In demo page, add react and vue demos in codesandbox.

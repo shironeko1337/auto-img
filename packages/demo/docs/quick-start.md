@@ -3,7 +3,7 @@
 **Install Webcomponent and API**
 
 ```bash
-npm install autoimg -D
+npm install @shironeko1052/autoimg -D
 ```
 
 ```html
@@ -17,7 +17,7 @@ npm install autoimg -D
 
 **Install Only API**:
 ```bash
-npm install autoimg-core/api -D
+npm install @shironeko1052/autoimg-core/api -D
 ```
 
 ```html

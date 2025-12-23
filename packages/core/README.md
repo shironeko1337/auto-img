@@ -1,7 +1,7 @@
 # AutoImg Core
 
-<!-- Uncomment after publishing to npm -->
-<!-- [![npm bundle size](https://img.shields.io/bundlephobia/minzip/autoimg-core?label=size%20(minified%20%2B%20gzipped))](https://bundlephobia.com/package/autoimg-core) -->
+[![npm](https://img.shields.io/npm/v/@shironeko1052/autoimg-core)](https://www.npmjs.com/package/@shironeko1052/autoimg-core)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@shironeko1052/autoimg-core?label=core%2Fapi%20size&color=blue)](https://bundlephobia.com/package/@shironeko1052/autoimg-core)
 
 ## Description
 
