@@ -1,6 +1,6 @@
 {
   "name": "@shironeko1052/autoimg-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Core library for resizing and shifting images to keep content focused",
   "author": "Liyi Zhang",
   "license": "MIT",
@@ -63,6 +63,7 @@
     "test:ui": "vitest --ui"
   },
   "devDependencies": {
+    "@huggingface/transformers": "^3.0.0",
     "@playwright/browser-chromium": "^1.56.1",
     "@types/node": "^24.10.1",
     "@vitest/browser-playwright": "^4.0.6",
@@ -72,8 +73,5 @@
     "playwright": "^1.56.1",
     "tsup": "^8.0.0",
     "vitest": "^4.0.6"
-  },
-  "dependencies": {
-    "@huggingface/transformers": "^3.0.0"
   }
 }

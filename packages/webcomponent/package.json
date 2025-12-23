@@ -1,6 +1,6 @@
 {
   "name": "@shironeko1052/autoimg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web component for content-aware image resizing and focusing",
   "author": "Liyi Zhang",
   "license": "MIT",
@@ -51,14 +51,6 @@
     "demo:watch": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --watch",
     "test": "vitest run",
     "test:watch": "vitest"
-  },
-  "peerDependencies": {
-    "@types/react": "*"
-  },
-  "peerDependenciesMeta": {
-    "@types/react": {
-      "optional": true
-    }
   },
   "dependencies": {
     "@shironeko1052/autoimg-core": "^0.1.0"
