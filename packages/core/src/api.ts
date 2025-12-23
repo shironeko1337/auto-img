@@ -43,7 +43,7 @@ export class AutoImgAPI {
   constructor(config: AutoImgConfig = {}) {
     if (typeof globalThis === "undefined" || typeof document === "undefined") {
       console.error(
-        "autoimg-webcomponent: This library requires a browser environment with DOM support"
+        "autoimg: This library requires a browser environment with DOM support"
       );
       return;
     }

@@ -2,6 +2,9 @@ import { iterateCartesianProduct } from "./util";
 import { describe, it, expect } from "vitest";
 import { page } from "vitest/browser";
 import { Rect, Point, Image } from "./base";
+
+// Skip screenshot tests in CI (Linux vs Windows rendering differences)
+const isCI = !!process.env.CI;
 import {
   AutoImgInput,
   Centralizer,
@@ -181,7 +184,7 @@ describe("core functionality", () => {
     // console.log(input);
 
     for (const centralizer of centralizers) {
-      it(`renders correctly for ${centralizer.name} with ${desc}`, async () => {
+      it.skipIf(isCI)(`renders correctly for ${centralizer.name} with ${desc}`, async () => {
         const element = await setup(inputCopy, centralizer);
         // nextTick
         await new Promise<void>((r) => setTimeout(() => r(), 100));

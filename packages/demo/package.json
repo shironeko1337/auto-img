@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "autoimg-core": "^0.1.0",
-    "autoimg-webcomponent": "*"
+    "autoimg": "^0.1.0"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

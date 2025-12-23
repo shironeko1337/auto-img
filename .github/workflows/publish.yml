@@ -26,8 +26,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Run tests
         run: npm test --workspaces --if-present
+        env:
+          CI: true
 
       - name: Build all packages
         run: npm run build --workspaces --if-present
@@ -35,10 +40,16 @@ jobs:
       - name: Build production packages
         run: npm run build:prod --workspaces --if-present
 
-      - name: Publish packages
+      - name: Publish packages (in dependency order)
         run: |
+          # Publish in order: core → webcomponent → react/vue
+          echo "Publishing autoimg-core..."
           npm publish --workspace=packages/core --access public --provenance
+
+          echo "Publishing autoimg (webcomponent)..."
           npm publish --workspace=packages/webcomponent --access public --provenance
+
+          echo "Publishing autoimg-react and autoimg-vue..."
           npm publish --workspace=packages/react --access public --provenance
           npm publish --workspace=packages/vue --access public --provenance
         env:
