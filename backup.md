@@ -102,6 +102,7 @@ Properties that doesn't exist:
 - [x] Fix visualize animation.
 - [x] Move centralizer playground to demo.
 - [x] Find a way to render static README files in the demo.
+- [ ] use a static image to replace all occurances in the demo
 
 
 ```html
