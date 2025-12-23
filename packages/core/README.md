@@ -1,4 +1,7 @@
-# autoimg-core
+# AutoImg Core
+
+<!-- Uncomment after publishing to npm -->
+<!-- [![npm bundle size](https://img.shields.io/bundlephobia/minzip/autoimg-core?label=size%20(minified%20%2B%20gzipped))](https://bundlephobia.com/package/autoimg-core) -->
 
 ## Description
 

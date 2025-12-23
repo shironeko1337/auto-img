@@ -1,0 +1,45 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers on version tags like v1.0.0, v0.1.0, etc.
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for npm provenance
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test --workspaces --if-present
+
+      - name: Build all packages
+        run: npm run build --workspaces --if-present
+
+      - name: Build production packages
+        run: npm run build:prod --workspaces --if-present
+
+      - name: Publish packages
+        run: |
+          npm publish --workspace=packages/core --access public --provenance
+          npm publish --workspace=packages/webcomponent --access public --provenance
+          npm publish --workspace=packages/react --access public --provenance
+          npm publish --workspace=packages/vue --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

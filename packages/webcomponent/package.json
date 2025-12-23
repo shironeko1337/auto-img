@@ -39,8 +39,12 @@
     "dist",
     "custom-elements.json"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts",
+    "build:prod": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --minify --clean",
     "dev": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts --watch",
     "build:demo": "tsup src/index.ts src/auto-img-element.define.ts --format esm,cjs,iife --dts",
     "demo": "npm run build:demo && npx serve .",
@@ -57,7 +61,7 @@
     }
   },
   "dependencies": {
-    "autoimg-core": "*"
+    "autoimg-core": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

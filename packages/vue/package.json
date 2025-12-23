@@ -18,6 +18,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:shironeko1337/auto-img.git",
@@ -41,13 +44,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "build:prod": "vue-tsc && vite build --mode production --config vite.config.prod.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "dependencies": {
     "vue": "^3.5.13",
-    "autoimg": "*"
+    "autoimg": "^0.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

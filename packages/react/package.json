@@ -18,6 +18,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:shironeko1337/auto-img.git",
@@ -41,6 +44,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:prod": "tsc && vite build --mode production --config vite.config.prod.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -48,7 +52,7 @@
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "autoimg": "*"
+    "autoimg": "^0.1.0"
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",

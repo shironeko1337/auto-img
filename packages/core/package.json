@@ -46,8 +46,12 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup src/index.ts src/index.api.ts --format esm,cjs --dts",
+    "build:prod": "tsup src/index.ts src/index.api.ts --format esm,cjs --dts --minify --clean",
     "build:watch": "tsup src/index.ts src/index.api.ts --format esm,cjs --dts --watch",
     "visualize:build": "tsup --config tsup.visualize.config.ts",
     "visualize:roi": "npm run visualize:build && start visualizer_roi.html",

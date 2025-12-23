@@ -19,7 +19,7 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: false, // Set to true for build:prod
-    minify: false, // Set to 'esbuild' for build:prod
+    sourcemap: 'hidden', // Generates sourcemap files but doesn't reference them in the bundle
+    minify: 'esbuild', // Minify for production
   },
 })

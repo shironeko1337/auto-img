@@ -4,7 +4,7 @@
   "description": "Demo application for AutoImg library",
   "author": "Liyi Zhang",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "type": "module",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "demo:watch": "npm run build:watch"
   },
   "dependencies": {
-    "autoimg-core": "*",
+    "autoimg-core": "^0.1.0",
     "autoimg-webcomponent": "*"
   },
   "devDependencies": {
