@@ -24,5 +24,8 @@ export default defineConfig({
 
     },
     include: ['src/**/*_test.ts', 'src/**/*.test.ts'],
+    env: {
+      CI: process.env.CI || '',
+    },
   },
 });

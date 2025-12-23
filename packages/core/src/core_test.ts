@@ -4,8 +4,8 @@ import { page } from "vitest/browser";
 import { Rect, Point, Image } from "./base";
 
 // Skip screenshot tests in CI (Linux vs Windows rendering differences)
-// Use import.meta.env for browser compatibility
-const isCI = typeof import.meta !== 'undefined' && import.meta.env?.CI === 'true';
+// @ts-ignore - CI is defined in vitest.config.ts env
+const isCI = import.meta.env.CI === 'true';
 import {
   AutoImgInput,
   Centralizer,
