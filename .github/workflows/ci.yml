@@ -23,6 +23,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build all packages
+        run: |
+          npm run build:prod --workspace=packages/core
+          npm run build:prod --workspace=packages/webcomponent
+          npm run build:prod --workspace=packages/react
+          npm run build:prod --workspace=packages/vue
+          npm run build --workspace=packages/demo
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
@@ -34,11 +42,3 @@ jobs:
           npm test --workspace=packages/vue --if-present
         env:
           CI: true
-
-      - name: Build all packages
-        run: |
-          npm run build:prod --workspace=packages/core
-          npm run build:prod --workspace=packages/webcomponent
-          npm run build:prod --workspace=packages/react
-          npm run build:prod --workspace=packages/vue
-          npm run build --workspace=packages/demo
