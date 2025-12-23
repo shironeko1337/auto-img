@@ -8,20 +8,17 @@ on:
 
 jobs:
   test:
+    name: Test All Packages
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [24]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '24'
 
       - name: Install dependencies
         run: npm install
@@ -29,13 +26,19 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run tests
-        run: npm test --workspaces --if-present
+      - name: Run all tests
+        run: |
+          npm test --workspace=packages/core
+          npm test --workspace=packages/webcomponent --if-present
+          npm test --workspace=packages/react --if-present
+          npm test --workspace=packages/vue --if-present
         env:
           CI: true
 
-      - name: Build packages
-        run: npm run build --workspaces --if-present
-
-      - name: Build production packages
-        run: npm run build:prod --workspaces --if-present
+      - name: Build all packages
+        run: |
+          npm run build:prod --workspace=packages/core
+          npm run build:prod --workspace=packages/webcomponent
+          npm run build:prod --workspace=packages/react
+          npm run build:prod --workspace=packages/vue
+          npm run build --workspace=packages/demo

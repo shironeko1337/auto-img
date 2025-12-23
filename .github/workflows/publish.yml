@@ -7,9 +7,8 @@ on:
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
-  # Stage 1: Test and publish core packages
-  publish-core:
-    name: Test & Publish Core Packages
+  publish:
+    name: Test & Publish All Packages
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,65 +30,31 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Test core packages
+      - name: Run all tests
         run: |
           npm test --workspace=packages/core
           npm test --workspace=packages/webcomponent --if-present
+          npm test --workspace=packages/react --if-present
+          npm test --workspace=packages/vue --if-present
         env:
           CI: true
 
-      - name: Build core packages
+      - name: Build all packages
         run: |
           npm run build:prod --workspace=packages/core
           npm run build:prod --workspace=packages/webcomponent
+          npm run build:prod --workspace=packages/react
+          npm run build:prod --workspace=packages/vue
+          npm run build --workspace=packages/demo
 
-      - name: Publish core packages
+      - name: Publish packages in dependency order
         run: |
           echo "Publishing autoimg-core..."
           npm publish --workspace=packages/core --access public --provenance
 
           echo "Publishing autoimg (webcomponent)..."
           npm publish --workspace=packages/webcomponent --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  # Stage 2: Test and publish framework packages + demo (after core is published)
-  publish-frameworks:
-    name: Test & Publish Framework Packages + Demo
-    needs: publish-core
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write # Required for npm provenance
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Test framework packages
-        run: |
-          npm test --workspace=packages/react --if-present
-          npm test --workspace=packages/vue --if-present
-        env:
-          CI: true
-
-      - name: Build framework packages and demo
-        run: |
-          npm run build:prod --workspace=packages/react
-          npm run build:prod --workspace=packages/vue
-          npm run build --workspace=packages/demo
-
-      - name: Publish framework packages and demo
-        run: |
           echo "Publishing autoimg-react..."
           npm publish --workspace=packages/react --access public --provenance
 

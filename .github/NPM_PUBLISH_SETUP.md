@@ -73,16 +73,20 @@ After the workflow completes:
 1. Check npm: `npm view autoimg-core`
 2. Visit package page: `https://www.npmjs.com/package/autoimg-core`
 
-## Workflows Created
+## Workflows
 
-### 1. `publish.yml` - Publishing
-- **Triggers**: When you push a version tag (v*.*.*)
-- **Actions**: Tests → Build → Publish to npm
-
-### 2. `ci.yml` - Continuous Integration
+### 1. `ci.yml` - Continuous Integration
 - **Triggers**: Push to main/develop, Pull Requests
-- **Actions**: Tests → Build (no publish)
-- **Node versions**: 24
+- **Actions**: Test all packages → Build all packages
+- **Uses**: Local workspace code (via npm workspaces)
+- **Purpose**: Catch issues early during development
+
+### 2. `publish.yml` - Test & Publish
+- **Triggers**: When you push a version tag (v*.*.*)
+- **Actions**: Test all packages → Build all packages → Publish to npm
+- **Uses**: Local workspace code for testing
+- **Publishes in order**: core → webcomponent → react → vue → demo
+- **Node version**: 24
 
 ## Troubleshooting
 
