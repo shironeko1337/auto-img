@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "build:js": "tsup",
-    "build:css": "tailwindcss -i ./styles.css -o ./dist/styles.css",
+    "build:css": "npx tailwindcss -i ./styles.css -o ./dist/styles.css",
     "build": "npm run build:js && npm run build:css",
     "watch:js": "tsup --watch",
     "watch:css": "tailwindcss -i ./styles.css -o ./dist/styles.css --watch",

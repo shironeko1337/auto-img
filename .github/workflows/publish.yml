@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Tailwind CSS globally
-        run: npm install -g tailwindcss
-
       - name: Build all packages
         run: |
           npm run build:prod --workspace=packages/core
