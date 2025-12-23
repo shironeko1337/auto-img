@@ -82,7 +82,7 @@ After the workflow completes:
 ### 2. `ci.yml` - Continuous Integration
 - **Triggers**: Push to main/develop, Pull Requests
 - **Actions**: Tests → Build (no publish)
-- **Node versions**: 18, 20 (matrix testing)
+- **Node versions**: 24
 
 ## Troubleshooting
 
