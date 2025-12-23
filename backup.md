@@ -88,8 +88,8 @@ Properties that doesn't exist:
 - [x] Review the vibe coded demos and unit tests react and vue
 - [x] Finalize README docs.
 - [x] Setup CICD pipeline.
-- [ ] Upload npm packages and enable CDN usage.
-- [ ] Setup an online demo.
+- [x] Upload npm packages and enable CDN usage.
+- [x] Setup an online demo.
 - [ ] In demo page, add react and vue demos in codesandbox.
 - [ ] Further optimizations, more friendly API? get faster? Different version of images based on container size? Using a self hosting website and AI to auto find focus or auto upscaling?...
 
@@ -102,7 +102,7 @@ Properties that doesn't exist:
 - [x] Fix visualize animation.
 - [x] Move centralizer playground to demo.
 - [x] Find a way to render static README files in the demo.
-- [ ] use a static image to replace all occurances in the demo
+- [ ] use a static image to replace all occurances of the cattle in the demo
 - [ ] make screenshot test results identical xos
 
 

@@ -1,4 +1,4 @@
-# 📸 AutoImg
+# AutoImg
 
 [![webcomponent bundle](https://img.shields.io/bundlephobia/minzip/@shironeko1052/autoimg?label=size%20(minified%20%2B%20gzipped))](https://bundlephobia.com/package/@shironeko1052/autoimg)
 [![api bundle](https://img.shields.io/bundlephobia/minzip/@shironeko1052/autoimg-core?label=core%2Fapi%20size&color=blue)](https://bundlephobia.com/package/@shironeko1052/autoimg-core)
@@ -71,4 +71,4 @@ Icons used in the demo from:
 - [Icon Park](https://icon-park.oceanengine.com/) - Apache 2.0 License
 - [Google Material Icons](https://fonts.google.com/icons) - Apache 2.0 License
 
-All icons provided via [Iconify](https://iconify.design/)
+All icons in the demo are provided via [Iconify](https://iconify.design/)
