@@ -11,7 +11,7 @@
 - ✅ Baseline [Compatibility](https://developer.mozilla.org/en-US/docs/Glossary/Baseline/Compatibility).
 
 ## 🎬 Demo
-[Live demo]()
+[Live demo](https://shironeko1337.github.io/auto-img/)
 
 **💻 Local hosting**
 ```bash

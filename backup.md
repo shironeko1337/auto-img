@@ -1,4 +1,4 @@
-# 📸 AutoImg
+# AutoImg
 A library for resizing and shifting image to make content focused. 🎯
 
 Before diving in this repository, think of these questions:
