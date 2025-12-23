@@ -56,3 +56,13 @@ npm install autoimg-core/api -D
 
 ## 📄 License
 Copyright (c) 2025, Liyi Zhang. (MIT License)
+
+## Credits
+
+Icons used in the demo from:
+- [Material Design Icons](https://materialdesignicons.com/) - Apache 2.0 License
+- [Material Symbols](https://fonts.google.com/icons) - Apache 2.0 License
+- [Icon Park](https://icon-park.oceanengine.com/) - Apache 2.0 License
+- [Google Material Icons](https://fonts.google.com/icons) - Apache 2.0 License
+
+All icons provided via [Iconify](https://iconify.design/)
